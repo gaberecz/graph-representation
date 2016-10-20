@@ -44,6 +44,7 @@
     <addaction name="separator"/>
     <addaction name="action_insert_man"/>
     <addaction name="action_insert_woman"/>
+    <addaction name="action_set_priorities_of"/>
    </widget>
    <addaction name="menuOperations"/>
   </widget>
@@ -109,6 +110,11 @@
   <action name="action_reset_all_data">
    <property name="text">
     <string>Reset all data</string>
+   </property>
+  </action>
+  <action name="action_set_priorities_of">
+   <property name="text">
+    <string>Set priorities of...</string>
    </property>
   </action>
  </widget>

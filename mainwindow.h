@@ -26,6 +26,7 @@ public slots:
     void insertMan();
     void insertWoman();
     void resetAllData();
+    void setPrioritiesOf();
 };
 
 #endif // MAINWINDOW_H

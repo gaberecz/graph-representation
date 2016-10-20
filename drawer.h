@@ -24,7 +24,9 @@ public:
     void resetAllData();
     QString insert_man;
     QString insert_woman;
+    QString set_priorities;
     QString operationState;
+    void setPrioritiesOf();
 
 private:
     double radius;
@@ -36,6 +38,8 @@ private:
     void DrawEll(double x, double y, double radius, QPainter* painter, int i);
     QPoint Knocking(QPoint point);
     int randInt(int low, int high);
+    bool clickedOnElement(int actualXPosition, int actualYPosition);
+    int indexOfClickedElement(QPoint cursorPosition);
 };
 
 #endif // DRAWER_H

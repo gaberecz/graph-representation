@@ -7,6 +7,7 @@ Drawer::Drawer(QWidget *parent) :
     setMouseTracking(true);
     insert_man = "insert_man";
     insert_woman = "insert_woman";
+    set_priorities = "set_priorities";
     operationState = "";
 
     QTimer* timer = new QTimer(this);
@@ -59,6 +60,10 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event)
                         graphStructure.addMan(Knocking(cursorPosition));
                     } else if (operationState == insert_woman) {
                         graphStructure.addWoman(Knocking(cursorPosition));
+                    } else if (operationState.contains(set_priorities)) {
+                        if (clickedOnElement(cursorPosition.x(), cursorPosition.y())) {
+                            graphStructure.setPrioritiesForElement(indexOfClickedElement(cursorPosition));
+                        }
                     }
                 }
             }
@@ -91,58 +96,45 @@ void Drawer::DrawEll(double x, double y, double radius, QPainter* painter, int i
 }
 
 QPoint Drawer::Knocking(QPoint point) {
-    QList<int> engagedXPositions = graphStructure.elementsXPosition;
-    QList<int> engagedYPositions = graphStructure.elementsYPosition;
+
 
     int actualXPosition = point.x();
     int actualYPosition = point.y();
     QString tryThisDirection = "";
-    int notDisturbedElementsNumber = 0;
 
-    if (engagedXPositions.length() == 0) {
+    if (graphStructure.elementsXPosition.length() == 0) {
         return point;
     }
 
-    while (notDisturbedElementsNumber <= (engagedXPositions.length())) {
-        for (int i=0; i<engagedXPositions.length() ;i++) {
-            if (actualXPosition >= engagedXPositions[i] - radius && actualXPosition <= engagedXPositions[i] + radius && actualYPosition >= engagedYPositions[i] - radius && actualYPosition <= engagedYPositions[i] + radius) {
-                while (qPow(engagedXPositions[i] - actualXPosition, 2) + qPow(engagedYPositions[i] - actualYPosition, 2) <= qPow( 1.5 * radius ,2)) {
+    while (clickedOnElement(actualXPosition, actualYPosition)) {
+        if (randInt(0,2) != 2) {
+            if (randInt(0,1) == 0) {
+                if (tryThisDirection != "move_right") {
+                    actualXPosition -= 25;
+                    tryThisDirection = "move_left";
 
-                    if (randInt(0,2) != 2) {
-                        if (randInt(0,1) == 0) {
-                            if (tryThisDirection != "move_right") {
-                                actualXPosition -= 25;
-                                tryThisDirection = "move_left";
-
-                            }
-
-                        } else {
-                            if (tryThisDirection != "move_left") {
-                                actualXPosition += 25;
-                                tryThisDirection = "move_right";
-                            }
-
-                        }
-                    } else {
-                        if (randInt(0,1) == 0) {
-                            if (tryThisDirection != "move_down") {
-                                actualYPosition -= 25;
-                                tryThisDirection = "move_up";
-                            }
-
-                        } else {
-                            if (tryThisDirection != "move_up") {
-                                actualYPosition += 25;
-                                tryThisDirection = "move_down";
-                            }
-
-                        }
-                    }
                 }
 
-                notDisturbedElementsNumber = 0;
             } else {
-                notDisturbedElementsNumber++;
+                if (tryThisDirection != "move_left") {
+                    actualXPosition += 25;
+                    tryThisDirection = "move_right";
+                }
+
+            }
+        } else {
+            if (randInt(0,1) == 0) {
+                if (tryThisDirection != "move_down") {
+                    actualYPosition -= 25;
+                    tryThisDirection = "move_up";
+                }
+
+            } else {
+                if (tryThisDirection != "move_up") {
+                    actualYPosition += 25;
+                    tryThisDirection = "move_down";
+                }
+
             }
         }
     }
@@ -151,6 +143,38 @@ QPoint Drawer::Knocking(QPoint point) {
         return QPoint(actualXPosition, actualYPosition);
     } else {
         return Knocking(point);
+    }
+}
+
+bool Drawer::clickedOnElement(int actualXPosition, int actualYPosition) {
+    QList<int> engagedXPositions = graphStructure.elementsXPosition;
+    QList<int> engagedYPositions = graphStructure.elementsYPosition;
+    int notDisturbedElementsNumber = 0;
+
+    while (notDisturbedElementsNumber <= (engagedXPositions.length())) {
+        for (int i=0; i<engagedXPositions.length() ;i++) {
+            if (actualXPosition >= engagedXPositions[i] - radius && actualXPosition <= engagedXPositions[i] + radius && actualYPosition >= engagedYPositions[i] - radius && actualYPosition <= engagedYPositions[i] + radius) {
+                return true;
+            } else {
+                notDisturbedElementsNumber++;
+            }
+        }
+    }
+
+    return false;
+}
+
+int Drawer::indexOfClickedElement(QPoint actualPosition) {
+    int actualXPosition = actualPosition.x();
+    int actualYPosition = actualPosition.y();
+    QList<int> engagedXPositions = graphStructure.elementsXPosition;
+    QList<int> engagedYPositions = graphStructure.elementsYPosition;
+    int positionOfPoint = -1;
+
+    for (int i=0; i<engagedXPositions.length() ;i++) {
+        if (actualXPosition >= engagedXPositions[i] - radius && actualXPosition <= engagedXPositions[i] + radius && actualYPosition >= engagedYPositions[i] - radius && actualYPosition <= engagedYPositions[i] + radius) {
+            return i;
+        }
     }
 }
 
