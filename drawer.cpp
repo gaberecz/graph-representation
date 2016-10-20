@@ -35,13 +35,13 @@ void Drawer::paintEvent(QPaintEvent *event) {
     painter.setBrush(QBrush("#cccbc9"));
     painter.drawRect(radius/2,radius/2,this->width()-radius,this->height()-radius);
 
-    painter.setBrush(QBrush("#75ff05"));
+    painter.setBrush(QBrush("#2BB9FF"));
 
     for (int i=0; i< graphStructure.men.length();i++) {
         DrawEll(graphStructure.elementsXPosition[graphStructure.men[i]]-radius/2, graphStructure.elementsYPosition[graphStructure.men[i]]-radius/2, radius, &painter, i);
     }
 
-    painter.setBrush(QBrush("#ffff00"));
+    painter.setBrush(QBrush("#E41818"));
 
     for (int i=0; i< graphStructure.women.length();i++) {
         DrawEll(graphStructure.elementsXPosition[graphStructure.women[i]]-radius/2, graphStructure.elementsYPosition[graphStructure.women[i]]-radius/2, radius, &painter, i);
@@ -78,18 +78,18 @@ void Drawer::DrawEll(double x, double y, double radius, QPainter* painter, int i
     QRectF rectangle(x, y, radius, radius);
     painter->drawEllipse(rectangle);
 
-    /*if (i < 9) {
-        painter->drawText(QPoint(xPos[i] - radius/6, yPos[i] + radius/4), QString::number(i + 1));
+    if (i < 9) {
+        painter->drawText(QPoint(x + radius / 40 * 13, y + radius / 4 * 3), QString::number(i + 1));
     } else {
         if (i<99)
-        painter->drawText(QPoint(xPos[i] - radius/3, yPos[i] + radius/4), QString::number(i + 1));
+        painter->drawText(QPoint(x + radius / 40 * 7, y + radius / 4 * 3), QString::number(i + 1));
         else {
             QFont font = painter->font();
             font.setPointSize(16);
             painter->setFont(font);
-            painter->drawText(QPoint(xPos[i] - radius/2.5, yPos[i] + radius/4), QString::number(i + 1));
+            painter->drawText(QPoint(x + radius / 13, y + radius / 4 * 3), QString::number(i + 1));
             font.setPointSize(18);
             painter->setFont(font);
         }
-    }*/
+    }
 }
