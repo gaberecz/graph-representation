@@ -55,7 +55,6 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event)
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
                 if (cursorpositionInBorder(cursorPosition)) {
-                    qDebug() << "cliecked inside the border";
                     if (operationState == insert_man) {
                         graphStructure.addMan(Knocking(cursorPosition));
                     } else if (operationState == insert_woman) {
@@ -98,13 +97,13 @@ QPoint Drawer::Knocking(QPoint point) {
     int actualXPosition = point.x();
     int actualYPosition = point.y();
     QString tryThisDirection = "";
-    int Good = 0;
+    int notDisturbedElementsNumber = 0;
 
     if (engagedXPositions.length() == 0) {
         return point;
     }
 
-    while (Good <= (engagedXPositions.length())) {
+    while (notDisturbedElementsNumber <= (engagedXPositions.length())) {
         for (int i=0; i<engagedXPositions.length() ;i++) {
             if (actualXPosition >= engagedXPositions[i] - radius && actualXPosition <= engagedXPositions[i] + radius && actualYPosition >= engagedYPositions[i] - radius && actualYPosition <= engagedYPositions[i] + radius) {
                 while (qPow(engagedXPositions[i] - actualXPosition, 2) + qPow(engagedYPositions[i] - actualYPosition, 2) <= qPow( 1.5 * radius ,2)) {
@@ -141,16 +140,28 @@ QPoint Drawer::Knocking(QPoint point) {
                     }
                 }
 
-                Good = 0;
+                notDisturbedElementsNumber = 0;
             } else {
-                Good++;
+                notDisturbedElementsNumber++;
             }
         }
     }
 
-    return QPoint(actualXPosition, actualYPosition);
+    if (cursorpositionInBorder(cursorPosition)) {
+        return QPoint(actualXPosition, actualYPosition);
+    } else {
+        return Knocking(point);
+    }
 }
 
 int Drawer::randInt(int low, int high) {
     return qrand() % ((high + 1) - low) + low;
+}
+
+void Drawer::resetAllData() {
+    operationState = "";
+    graphStructure.elementsXPosition.clear();
+    graphStructure.elementsYPosition.clear();
+    graphStructure.men.clear();
+    graphStructure.women.clear();
 }

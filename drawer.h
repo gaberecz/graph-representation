@@ -21,8 +21,7 @@ class Drawer : public QWidget
 {
 public:
     Drawer(QWidget *parent = 0);
-    void paintEvent(QPaintEvent* event);
-    bool eventFilter(QObject *obj, QEvent *event);
+    void resetAllData();
     QString insert_man;
     QString insert_woman;
     QString operationState;
@@ -31,6 +30,8 @@ private:
     double radius;
     QPoint cursorPosition;
     GraphStructure graphStructure;
+    void paintEvent(QPaintEvent* event);
+    bool eventFilter(QObject *obj, QEvent *event);
     bool cursorpositionInBorder(QPoint cursorPosition);
     void DrawEll(double x, double y, double radius, QPainter* painter, int i);
     QPoint Knocking(QPoint point);

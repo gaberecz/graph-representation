@@ -40,6 +40,8 @@
     <property name="title">
      <string>Operations</string>
     </property>
+    <addaction name="action_reset_all_data"/>
+    <addaction name="separator"/>
     <addaction name="action_insert_man"/>
     <addaction name="action_insert_woman"/>
    </widget>
@@ -102,6 +104,11 @@
   <action name="action_insert_woman">
    <property name="text">
     <string>Insert woman</string>
+   </property>
+  </action>
+  <action name="action_reset_all_data">
+   <property name="text">
+    <string>Reset all data</string>
    </property>
   </action>
  </widget>

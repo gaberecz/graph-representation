@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->action_insert_man, SIGNAL(triggered()), this, SLOT(insertMan()));
     connect(ui->action_insert_woman, SIGNAL(triggered()), this, SLOT(insertWoman()));
-
+    connect(ui->action_reset_all_data, SIGNAL(triggered()), this, SLOT(resetAllData()));
 }
 
 MainWindow::~MainWindow()
@@ -26,4 +26,8 @@ void MainWindow::insertMan() {
 
 void MainWindow::insertWoman() {
     drawer->operationState =drawer->insert_woman;
+}
+
+void MainWindow::resetAllData() {
+    drawer->resetAllData();
 }

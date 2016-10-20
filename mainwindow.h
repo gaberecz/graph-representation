@@ -25,6 +25,7 @@ public:
 public slots:
     void insertMan();
     void insertWoman();
+    void resetAllData();
 };
 
 #endif // MAINWINDOW_H
