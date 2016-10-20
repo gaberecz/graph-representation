@@ -2,6 +2,7 @@
 #define GRAPHSTRUCTURE_H
 
 #include <QList>
+#include <QGraphicsScene>
 
 class GraphStructure
 {
@@ -12,8 +13,8 @@ public:
     QList<int> men;
     QList<int> women;
 
-    void addMan(int xPos, int yPos);
-    void addWoman(int xPos, int yPos);
+    void addMan(QPoint point);
+    void addWoman(QPoint point);
     void addXYPositions(int xPos, int yPos);
 };
 

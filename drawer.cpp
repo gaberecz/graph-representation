@@ -17,9 +17,6 @@ Drawer::Drawer(QWidget *parent) :
     qsrand((uint)time.msec());
 
     radius = 40;
-
-//GraphStructure graphStructure = new GraphStructure();
-
 }
 
 void Drawer::paintEvent(QPaintEvent *event) {
@@ -52,17 +49,17 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QMouseEvent::MouseMove)
     {
-        CursorPosition = this->mapFromGlobal(QCursor::pos());
+        cursorPosition = this->mapFromGlobal(QCursor::pos());
     } else {
         if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
-                if (cursorpositionInBorder(CursorPosition)) {
+                if (cursorpositionInBorder(cursorPosition)) {
                     qDebug() << "cliecked inside the border";
                     if (operationState == insert_man) {
-                        graphStructure.addMan(CursorPosition.x(), CursorPosition.y());
+                        graphStructure.addMan(Knocking(cursorPosition));
                     } else if (operationState == insert_woman) {
-                        graphStructure.addWoman(CursorPosition.x(), CursorPosition.y());
+                        graphStructure.addWoman(Knocking(cursorPosition));
                     }
                 }
             }
@@ -92,4 +89,68 @@ void Drawer::DrawEll(double x, double y, double radius, QPainter* painter, int i
             painter->setFont(font);
         }
     }
+}
+
+QPoint Drawer::Knocking(QPoint point) {
+    QList<int> engagedXPositions = graphStructure.elementsXPosition;
+    QList<int> engagedYPositions = graphStructure.elementsYPosition;
+
+    int actualXPosition = point.x();
+    int actualYPosition = point.y();
+    QString tryThisDirection = "";
+    int Good = 0;
+
+    if (engagedXPositions.length() == 0) {
+        return point;
+    }
+
+    while (Good <= (engagedXPositions.length())) {
+        for (int i=0; i<engagedXPositions.length() ;i++) {
+            if (actualXPosition >= engagedXPositions[i] - radius && actualXPosition <= engagedXPositions[i] + radius && actualYPosition >= engagedYPositions[i] - radius && actualYPosition <= engagedYPositions[i] + radius) {
+                while (qPow(engagedXPositions[i] - actualXPosition, 2) + qPow(engagedYPositions[i] - actualYPosition, 2) <= qPow( 1.5 * radius ,2)) {
+
+                    if (randInt(0,2) != 2) {
+                        if (randInt(0,1) == 0) {
+                            if (tryThisDirection != "move_right") {
+                                actualXPosition -= 25;
+                                tryThisDirection = "move_left";
+
+                            }
+
+                        } else {
+                            if (tryThisDirection != "move_left") {
+                                actualXPosition += 25;
+                                tryThisDirection = "move_right";
+                            }
+
+                        }
+                    } else {
+                        if (randInt(0,1) == 0) {
+                            if (tryThisDirection != "move_down") {
+                                actualYPosition -= 25;
+                                tryThisDirection = "move_up";
+                            }
+
+                        } else {
+                            if (tryThisDirection != "move_up") {
+                                actualYPosition += 25;
+                                tryThisDirection = "move_down";
+                            }
+
+                        }
+                    }
+                }
+
+                Good = 0;
+            } else {
+                Good++;
+            }
+        }
+    }
+
+    return QPoint(actualXPosition, actualYPosition);
+}
+
+int Drawer::randInt(int low, int high) {
+    return qrand() % ((high + 1) - low) + low;
 }

@@ -29,10 +29,12 @@ public:
 
 private:
     double radius;
-    QPoint CursorPosition;
+    QPoint cursorPosition;
     GraphStructure graphStructure;
-    bool cursorpositionInBorder(QPoint CursorPosition);
+    bool cursorpositionInBorder(QPoint cursorPosition);
     void DrawEll(double x, double y, double radius, QPainter* painter, int i);
+    QPoint Knocking(QPoint point);
+    int randInt(int low, int high);
 };
 
 #endif // DRAWER_H

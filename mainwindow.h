@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include "drawer.h"
 #include <QDebug>
-#include "dialog.h"
 
 namespace Ui {
 class MainWindow;
