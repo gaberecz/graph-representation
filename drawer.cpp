@@ -137,6 +137,7 @@ QPoint Drawer::Knocking(QPoint point) {
         if (randInt(0,2) != 2) {
             if (randInt(0,1) == 0) {
                 if (tryThisDirection != "move_right") {
+                    qDebug() << "moveLeft";
                     actualXPosition -= 25;
                     tryThisDirection = "move_left";
 
@@ -144,6 +145,7 @@ QPoint Drawer::Knocking(QPoint point) {
 
             } else {
                 if (tryThisDirection != "move_left") {
+                    qDebug() << "moveRight";
                     actualXPosition += 25;
                     tryThisDirection = "move_right";
                 }
@@ -152,12 +154,14 @@ QPoint Drawer::Knocking(QPoint point) {
         } else {
             if (randInt(0,1) == 0) {
                 if (tryThisDirection != "move_down") {
+                    qDebug() << "moveUP";
                     actualYPosition -= 25;
                     tryThisDirection = "move_up";
                 }
 
             } else {
                 if (tryThisDirection != "move_up") {
+                    qDebug() << "moveDown";
                     actualYPosition += 25;
                     tryThisDirection = "move_down";
                 }
@@ -174,6 +178,8 @@ QPoint Drawer::Knocking(QPoint point) {
 }
 
 bool Drawer::clickedOnElement(int actualXPosition, int actualYPosition) {
+    qDebug() << "clicked on element";
+
     QList<int> engagedXPositions = graphStructure.elementsXPosition;
     QList<int> engagedYPositions = graphStructure.elementsYPosition;
     int notDisturbedElementsNumber = 0;
@@ -181,7 +187,10 @@ bool Drawer::clickedOnElement(int actualXPosition, int actualYPosition) {
     while (notDisturbedElementsNumber <= (engagedXPositions.length())) {
         for (int i=0; i<engagedXPositions.length() ;i++) {
             if (actualXPosition >= engagedXPositions[i] - radius && actualXPosition <= engagedXPositions[i] + radius && actualYPosition >= engagedYPositions[i] - radius && actualYPosition <= engagedYPositions[i] + radius) {
-                return true;
+                if (qPow(engagedXPositions[i] - actualXPosition, 2) + qPow(engagedYPositions[i] - actualYPosition, 2) <= qPow( 1.5 * radius ,2)) {
+                    qDebug() << "element knocked";
+                    return true;
+                }
             } else {
                 notDisturbedElementsNumber++;
             }
@@ -221,6 +230,17 @@ void Drawer::resetAllData() {
     graphStructure.setPriorityselectorDatasToDefault();
 }
 
-void Drawer::generateRandomGraph() {
+void Drawer::generateRandomGraph(int gendergroupSize) {
+    graphStructure.addMan(QPoint(this->width() / 2, this->height() / 2));
+    graphStructure.addWoman(Knocking(QPoint(this->width() / 2, this->height() / 2)));
 
+    /*for (int i=1; i < gendergroupSize; i++) {
+        //this->width();
+        graphStructure.addMan(Knocking(QPoint(this->width() / 2, this->height() / 2)));
+        graphStructure.addWoman(Knocking(QPoint(this->width() / 2, this->height() / 2)));
+    }*/
+}
+
+void Drawer::solveTheProblem() {
+    solver->solveTheProblem();
 }

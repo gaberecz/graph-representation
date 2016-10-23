@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "drawer.h"
 #include <QDebug>
+#include "dialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,6 +20,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    Dialog* dialog;
 public:
     Drawer* drawer;
 
@@ -28,6 +30,7 @@ public slots:
     void resetAllData();
     void setPrioritiesOf();
     void generateRandomGraph();
+    void solverTheProblem();
 };
 
 #endif // MAINWINDOW_H

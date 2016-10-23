@@ -127,3 +127,11 @@ void GraphStructure::initNeighboursVector() {
 
     qDebug() << neighbours;
 }
+
+void GraphStructure::generateRandomGraph(int genderSize) {
+
+}
+
+void GraphStructure::solveTheProblem() {
+
+}

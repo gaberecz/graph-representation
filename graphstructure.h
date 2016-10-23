@@ -33,6 +33,8 @@ public:
     int positionOfXthElementInGenderbasedList(int indexOfELement, QString genderOfList);
     void initNeighboursVector();
     void setPriorityselectorDatasToDefault();
+    void generateRandomGraph(int genderSize);
+    void solveTheProblem();
 
 private:
     void fillNeighbourData();

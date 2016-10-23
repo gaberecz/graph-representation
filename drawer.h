@@ -16,6 +16,7 @@
 #include <QKeyEvent>
 
 #include "graphstructure.h"
+#include "problemsolver.h"
 
 class Drawer : public QWidget
 {
@@ -28,7 +29,9 @@ public:
     QString operationState;
     void setPrioritiesOf();
     GraphStructure graphStructure;
-    void generateRandomGraph();
+    void generateRandomGraph(int gendergroupSize);
+    ProblemSolver* solver = new ProblemSolver(&graphStructure.men, &graphStructure.women, &graphStructure.menPriorities, &graphStructure.womenPriorities, &graphStructure.neighbours);
+    void solveTheProblem();
 
 private:
     double radius;
@@ -42,6 +45,7 @@ private:
     int randInt(int low, int high);
     bool clickedOnElement(int actualXPosition, int actualYPosition);
     int indexOfClickedElement(QPoint cursorPosition);
+    void initManWomanPairSolution();
 };
 
 #endif // DRAWER_H

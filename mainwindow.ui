@@ -45,6 +45,9 @@
     <addaction name="action_insert_man"/>
     <addaction name="action_insert_woman"/>
     <addaction name="action_set_priorities_of"/>
+    <addaction name="separator"/>
+    <addaction name="action_generate_random_graph"/>
+    <addaction name="action_solve_the_problem"/>
    </widget>
    <addaction name="menuOperations"/>
   </widget>
@@ -120,6 +123,16 @@
   <action name="action_set_max_prio_length">
    <property name="text">
     <string>Set max prio length</string>
+   </property>
+  </action>
+  <action name="action_generate_random_graph">
+   <property name="text">
+    <string>Generate random graph</string>
+   </property>
+  </action>
+  <action name="action_solve_the_problem">
+   <property name="text">
+    <string>Solve the problem</string>
    </property>
   </action>
  </widget>

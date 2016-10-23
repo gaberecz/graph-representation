@@ -15,10 +15,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     drawer.cpp \
-    graphstructure.cpp
+    graphstructure.cpp \
+    dialog.cpp \
+    problemsolver.cpp
 
 HEADERS  += mainwindow.h \
     drawer.h \
-    graphstructure.h
+    graphstructure.h \
+    dialog.h \
+    problemsolver.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    dialog.ui

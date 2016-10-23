@@ -16,6 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_set_priorities_of, SIGNAL(triggered()), this, SLOT(setPrioritiesOf()));
     //connect(ui->action_set_max_prio_length, SIGNAL(triggered()), this, SLOT(setPrioritiesOf()));
     connect(ui->action_generate_random_graph, SIGNAL(triggered()), this, SLOT(generateRandomGraph()));
+    connect(ui->action_solve_the_problem, SIGNAL(triggered()), this, SLOT(solverTheProblem()));
+
+
+    dialog = new Dialog(this);
 }
 
 MainWindow::~MainWindow()
@@ -42,6 +46,10 @@ void MainWindow::setPrioritiesOf() {
 
 void MainWindow::generateRandomGraph() {
     if (dialog->exec() == QDialog::Accepted) {
-        drawer->CreateARandomGraph(dialog->getSize());
+        drawer->generateRandomGraph(dialog->getSize());
     }
+}
+
+void MainWindow::solverTheProblem() {
+    drawer->solveTheProblem();
 }
