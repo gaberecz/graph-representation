@@ -27,15 +27,17 @@ public:
     QString set_priorities;
     QString operationState;
     void setPrioritiesOf();
+    GraphStructure graphStructure;
+    void generateRandomGraph();
 
 private:
     double radius;
     QPoint cursorPosition;
-    GraphStructure graphStructure;
     void paintEvent(QPaintEvent* event);
     bool eventFilter(QObject *obj, QEvent *event);
     bool cursorpositionInBorder(QPoint cursorPosition);
     void DrawEll(double x, double y, double radius, QPainter* painter, int i);
+    void DrawEll(double x, double y, double radius, QPainter* painter);
     QPoint Knocking(QPoint point);
     int randInt(int low, int high);
     bool clickedOnElement(int actualXPosition, int actualYPosition);

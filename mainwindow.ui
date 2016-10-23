@@ -117,6 +117,11 @@
     <string>Set priorities of...</string>
    </property>
   </action>
+  <action name="action_set_max_prio_length">
+   <property name="text">
+    <string>Set max prio length</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

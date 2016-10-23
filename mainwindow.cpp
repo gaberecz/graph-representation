@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_insert_woman, SIGNAL(triggered()), this, SLOT(insertWoman()));
     connect(ui->action_reset_all_data, SIGNAL(triggered()), this, SLOT(resetAllData()));
     connect(ui->action_set_priorities_of, SIGNAL(triggered()), this, SLOT(setPrioritiesOf()));
+    //connect(ui->action_set_max_prio_length, SIGNAL(triggered()), this, SLOT(setPrioritiesOf()));
+    connect(ui->action_generate_random_graph, SIGNAL(triggered()), this, SLOT(generateRandomGraph()));
 }
 
 MainWindow::~MainWindow()
@@ -35,4 +37,11 @@ void MainWindow::resetAllData() {
 
 void MainWindow::setPrioritiesOf() {
     drawer->operationState = drawer->set_priorities;
+    drawer->graphStructure.initNeighboursVector();
+}
+
+void MainWindow::generateRandomGraph() {
+    if (dialog->exec() == QDialog::Accepted) {
+        drawer->CreateARandomGraph(dialog->getSize());
+    }
 }

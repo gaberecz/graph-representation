@@ -27,6 +27,7 @@ public slots:
     void insertWoman();
     void resetAllData();
     void setPrioritiesOf();
+    void generateRandomGraph();
 };
 
 #endif // MAINWINDOW_H

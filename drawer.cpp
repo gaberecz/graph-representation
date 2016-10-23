@@ -33,16 +33,39 @@ void Drawer::paintEvent(QPaintEvent *event) {
     painter.setBrush(QBrush("#cccbc9"));
     painter.drawRect(radius/2,radius/2,this->width()-radius,this->height()-radius);
 
-    painter.setBrush(QBrush("#2BB9FF"));
+    if (!graphStructure.neighbours.empty()) {
+        for (int i=0; i<graphStructure.neighbours.size(); i++) {
+            for (int j=0; j<graphStructure.neighbours.size(); j++) {
+                //if (i < j) {
+                    if (graphStructure.neighbours[i][j]) {
+                        painter.drawLine(QPoint(graphStructure.elementsXPosition[i], graphStructure.elementsYPosition[i]),QPoint(graphStructure.elementsXPosition[j], graphStructure.elementsYPosition[j]));
+                    }
+                //} else {
+                //    break;;
+                //}
+            }
+        }
+    }
 
+    painter.setBrush(QBrush("#2BB9FF"));
     for (int i=0; i< graphStructure.men.length();i++) {
         DrawEll(graphStructure.elementsXPosition[graphStructure.men[i]]-radius/2, graphStructure.elementsYPosition[graphStructure.men[i]]-radius/2, radius, &painter, i);
     }
 
     painter.setBrush(QBrush("#E41818"));
-
     for (int i=0; i< graphStructure.women.length();i++) {
         DrawEll(graphStructure.elementsXPosition[graphStructure.women[i]]-radius/2, graphStructure.elementsYPosition[graphStructure.women[i]]-radius/2, radius, &painter, i);
+    }
+
+
+    painter.setBrush(QBrush("#00FF44"));
+    if (graphStructure.actualSelecterPosition != -1) {
+        DrawEll(graphStructure.elementsXPosition[graphStructure.prioritizerPoint]-radius/2, graphStructure.elementsYPosition[graphStructure.prioritizerPoint]-radius/2, radius, &painter);
+
+        painter.setBrush(QBrush("#FFFF00"));
+        for (int i=0; i < graphStructure.actualPriorityPositions.length(); i++) {
+            DrawEll(graphStructure.elementsXPosition[graphStructure.actualPriorityPositions[i]]-radius/2, graphStructure.elementsYPosition[graphStructure.actualPriorityPositions[i]]-radius/2, radius, &painter, i);
+        }
     }
 }
 
@@ -76,8 +99,7 @@ bool Drawer::cursorpositionInBorder(QPoint CursorPosition) {
 }
 
 void Drawer::DrawEll(double x, double y, double radius, QPainter* painter, int i) {
-    QRectF rectangle(x, y, radius, radius);
-    painter->drawEllipse(rectangle);
+    DrawEll(x, y, radius, painter);
 
     if (i < 9) {
         painter->drawText(QPoint(x + radius / 40 * 13, y + radius / 4 * 3), QString::number(i + 1));
@@ -93,6 +115,11 @@ void Drawer::DrawEll(double x, double y, double radius, QPainter* painter, int i
             painter->setFont(font);
         }
     }
+}
+
+void Drawer::DrawEll(double x, double y, double radius, QPainter* painter) {
+    QRectF rectangle(x, y, radius, radius);
+    painter->drawEllipse(rectangle);
 }
 
 QPoint Drawer::Knocking(QPoint point) {
@@ -188,4 +215,12 @@ void Drawer::resetAllData() {
     graphStructure.elementsYPosition.clear();
     graphStructure.men.clear();
     graphStructure.women.clear();
+    graphStructure.menPriorities.clear();
+    graphStructure.womenPriorities.clear();
+    graphStructure.neighbours.clear();
+    graphStructure.setPriorityselectorDatasToDefault();
+}
+
+void Drawer::generateRandomGraph() {
+
 }

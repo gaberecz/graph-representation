@@ -3,13 +3,14 @@
 GraphStructure::GraphStructure()
 {
     actualSelecterPosition = -1;
+    prioritizerPoint = -1;
     actualSelecterGender = "none";
-    prioritySetLength = 3;
 }
 
 void GraphStructure::addMan(QPoint point) {
     addXYPositions(point.x(), point.y());
     men << elementsXPosition.length() - 1;
+    prioritySetLength = men.length();
     menPriorities << emptyQList;
 }
 
@@ -57,26 +58,33 @@ int GraphStructure::positionOfXthElementInGenderbasedList(int indexOfELement, QS
 void GraphStructure::setPrioritiesForElement(int index) {
     if (actualSelecterPosition == -1) {
         actualSelecterGender = genderOfXthElement(index);
-        qDebug() << actualSelecterGender;
+        //qDebug() << actualSelecterGender;
         actualSelecterPosition = positionOfXthElementInGenderbasedList(index, actualSelecterGender);
-        qDebug() << actualSelecterPosition;
+        prioritizerPoint = index;
+        //qDebug() << actualSelecterPosition;
 
     } else {
-        if (actualSelecterGender == "man") {
+        QString chosenPointGender = genderOfXthElement(index);
+
+        if (actualSelecterGender == "man" && chosenPointGender != "man") {
             int pos = positionOfXthElementInGenderbasedList(index, "woman");
             if (!menPriorities[actualSelecterPosition].contains(pos)) {
                 menPriorities[actualSelecterPosition] << pos;
             }
-            qDebug() << menPriorities;
+
+            //qDebug() << menPriorities;
+            actualPriorityPositions << index;
             if (menPriorities[actualSelecterPosition].length() == prioritySetLength) {
                 setPriorityselectorDatasToDefault();
             }
-        } else if (actualSelecterGender == "woman") {
+        } else if (actualSelecterGender == "woman" && chosenPointGender != "woman") {
             int pos = positionOfXthElementInGenderbasedList(index, "man");
             if (!womenPriorities[actualSelecterPosition].contains(pos)) {
                 womenPriorities[actualSelecterPosition] << pos;
             }
-            qDebug() << womenPriorities;
+
+            //qDebug() << womenPriorities;
+            actualPriorityPositions << index;
             if (womenPriorities[actualSelecterPosition].length() == prioritySetLength) {
                 setPriorityselectorDatasToDefault();
             }
@@ -87,5 +95,35 @@ void GraphStructure::setPrioritiesForElement(int index) {
 void GraphStructure::setPriorityselectorDatasToDefault() {
     actualSelecterPosition = -1;
     actualSelecterGender = "none";
+    actualPriorityPositions.clear();
+    fillNeighbourData();
     qDebug() << "everething set to def";
+}
+
+void GraphStructure::fillNeighbourData() {
+    for (int i=0; i < menPriorities.length(); i++) {
+        for (int j=0; j < womenPriorities.length(); j++) {
+            if (menPriorities[i].contains(j) && womenPriorities[j].contains(i)) {
+                neighbours[men[i]][women[j]] = true;
+                neighbours[women[j]][men[i]] = true;
+            }
+        }
+    }
+
+    qDebug() << neighbours;
+}
+
+void GraphStructure::initNeighboursVector() {
+    neighbours.resize(elementsXPosition.length());
+    for (int i=0;i<elementsXPosition.length();i++) {
+        neighbours[i].resize(elementsXPosition.length());
+    }
+
+    for (int i=0; i < neighbours.size(); i++) {
+        for (int j=0; j < neighbours.size(); j++) {
+            neighbours[i][j] = false;
+        }
+    }
+
+    qDebug() << neighbours;
 }

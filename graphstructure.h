@@ -21,6 +21,9 @@ public:
     QString actualSelecterGender;
     int actualSelecterPosition;
     int prioritySetLength;
+    int prioritizerPoint;
+    QList<int> actualPriorityPositions;
+    std::vector< std::vector<bool> > neighbours;
 
     void addMan(QPoint point);
     void addWoman(QPoint point);
@@ -28,9 +31,11 @@ public:
     void setPrioritiesForElement(int index);
     QString genderOfXthElement(int indexOfELement);
     int positionOfXthElementInGenderbasedList(int indexOfELement, QString genderOfList);
+    void initNeighboursVector();
+    void setPriorityselectorDatasToDefault();
 
 private:
-    void setPriorityselectorDatasToDefault();
+    void fillNeighbourData();
 };
 
 #endif // GRAPHSTRUCTURE_H
