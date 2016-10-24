@@ -124,7 +124,7 @@ void Drawer::DrawEll(double x, double y, double radius, QPainter* painter) {
 
 QPoint Drawer::Knocking(QPoint point) {
 
-
+    qDebug() << point;
     int actualXPosition = point.x();
     int actualYPosition = point.y();
     QString tryThisDirection = "";
@@ -170,7 +170,7 @@ QPoint Drawer::Knocking(QPoint point) {
         }
     }
 
-    if (cursorpositionInBorder(cursorPosition)) {
+    if (cursorpositionInBorder(QPoint(actualXPosition, actualYPosition))) {
         return QPoint(actualXPosition, actualYPosition);
     } else {
         return Knocking(point);
@@ -178,8 +178,6 @@ QPoint Drawer::Knocking(QPoint point) {
 }
 
 bool Drawer::clickedOnElement(int actualXPosition, int actualYPosition) {
-    qDebug() << "clicked on element";
-
     QList<int> engagedXPositions = graphStructure.elementsXPosition;
     QList<int> engagedYPositions = graphStructure.elementsYPosition;
     int notDisturbedElementsNumber = 0;
@@ -231,14 +229,18 @@ void Drawer::resetAllData() {
 }
 
 void Drawer::generateRandomGraph(int gendergroupSize) {
-    graphStructure.addMan(QPoint(this->width() / 2, this->height() / 2));
-    graphStructure.addWoman(Knocking(QPoint(this->width() / 2, this->height() / 2)));
+    //graphStructure.addMan(QPoint(this->width() / 2, this->height() / 2));
+    //graphStructure.addWoman(Knocking(QPoint(this->width() / 2, this->height() / 2)));
 
-    /*for (int i=1; i < gendergroupSize; i++) {
+    for (int i=0; i < gendergroupSize; i++) {
         //this->width();
         graphStructure.addMan(Knocking(QPoint(this->width() / 2, this->height() / 2)));
         graphStructure.addWoman(Knocking(QPoint(this->width() / 2, this->height() / 2)));
-    }*/
+    }
+
+    for (int i=0; i < gendergroupSize; i++) {
+        graphStructure.generatePrioritiesForElement(i);
+    }
 }
 
 void Drawer::solveTheProblem() {

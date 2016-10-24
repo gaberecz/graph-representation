@@ -4,6 +4,8 @@
 #include <QList>
 #include <QGraphicsScene>
 #include <QDebug>
+#include <QTime>
+#include <qmath.h>
 
 class GraphStructure
 {
@@ -33,11 +35,11 @@ public:
     int positionOfXthElementInGenderbasedList(int indexOfELement, QString genderOfList);
     void initNeighboursVector();
     void setPriorityselectorDatasToDefault();
-    void generateRandomGraph(int genderSize);
-    void solveTheProblem();
+    void generatePrioritiesForElement(int index);
 
 private:
     void fillNeighbourData();
+    int randInt(int low, int high);
 };
 
 #endif // GRAPHSTRUCTURE_H

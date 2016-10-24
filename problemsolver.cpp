@@ -32,7 +32,7 @@ int ProblemSolver::getActualPairForMan(int manIndex) {
 }
 
 int ProblemSolver::getActualPositionForManInPrefOreder(int prefIndex, int manIndex) {
-    for (int i=0; i<womenPriorities[prefIndex].length(); i++) {
+    for (int i=0; i<(*womenPriorities)[prefIndex].length(); i++) {
         if (womenPriorities->value(prefIndex)[i] == manIndex) {
             return i;
         }
@@ -40,7 +40,7 @@ int ProblemSolver::getActualPositionForManInPrefOreder(int prefIndex, int manInd
 }
 
 int ProblemSolver::getActualPositionForWomanInPrefOreder(int prefIndex, int womanIndex) {
-    for (int i=0; i<menPriorities[prefIndex].length(); i++) {
+    for (int i=0; i<(*menPriorities)[prefIndex].length(); i++) {
         if (menPriorities->value(prefIndex)[i] == womanIndex) {
             return i;
         }
@@ -107,7 +107,7 @@ void ProblemSolver::deleteGirlsActualPair(int nextGirlIndex) {
 
 void ProblemSolver::takeTheGirlsHand(int manIndex, int nextGirlIndex) {
     manWomanPairSolution[manIndex] = nextGirlIndex;
-    menPriorities->value(manIndex).removeFirst();
+    (*menPriorities)[manIndex].removeFirst();
 }
 
 void ProblemSolver::initManWomanPairSolution() {
@@ -119,20 +119,14 @@ void ProblemSolver::initManWomanPairSolution() {
 }
 
 void ProblemSolver::leaveUnnecessaryNeighbours() {
-    std::vector< std::vector<bool> > localNeighbours;
-    int size = men->length() + women->length();
-
-    localNeighbours.resize(size);
-    for (int i=0;i<size;i++) {
-        localNeighbours[i].resize(size);
-    }
-
-    for (int i=0; i < localNeighbours.size(); i++) {
-        for (int j=0; j < localNeighbours.size(); j++) {
-            localNeighbours[i][j] = false;
+    for (int i=0; i < neighbours->size(); i++) {
+        for (int j=0; j < neighbours->size(); j++) {
+            (*neighbours).at(i).at(j) = false;
         }
     }
 
-
-    //neighbours = &localNeighbours;
+    for (int i=0; i<manWomanPairSolution.size(); i++) {
+        (*neighbours).at((*men).at(i)).at((*women).at(manWomanPairSolution[i])) = true;
+        (*neighbours).at((*women).at(manWomanPairSolution[i])).at((*men).at(i)) = true;
+    }
 }

@@ -5,6 +5,9 @@ GraphStructure::GraphStructure()
     actualSelecterPosition = -1;
     prioritizerPoint = -1;
     actualSelecterGender = "none";
+
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
 }
 
 void GraphStructure::addMan(QPoint point) {
@@ -92,6 +95,37 @@ void GraphStructure::setPrioritiesForElement(int index) {
     }
 }
 
+void GraphStructure::generatePrioritiesForElement(int index) {
+    initNeighboursVector();
+    QList<int> possibleElementsList;
+
+    for (int i=0; i<women.size(); i++) {
+        possibleElementsList << i;
+    }
+
+    while (possibleElementsList.size() != 0) {
+        int randomIndex = randInt(0,possibleElementsList.size() - 1);
+        menPriorities[index] << possibleElementsList[randomIndex];
+        possibleElementsList.removeAt(randomIndex);
+    }
+
+    for (int i=0; i<men.size(); i++) {
+        possibleElementsList << i;
+    }
+
+    while (possibleElementsList.size() != 0) {
+        int randomIndex = randInt(0,possibleElementsList.size() - 1);
+        womenPriorities[index] << possibleElementsList[randomIndex];
+        possibleElementsList.removeAt(randomIndex);
+    }
+
+    fillNeighbourData();
+}
+
+int GraphStructure::randInt(int low, int high) {
+    return qrand() % ((high + 1) - low) + low;
+}
+
 void GraphStructure::setPriorityselectorDatasToDefault() {
     actualSelecterPosition = -1;
     actualSelecterGender = "none";
@@ -126,12 +160,4 @@ void GraphStructure::initNeighboursVector() {
     }
 
     qDebug() << neighbours;
-}
-
-void GraphStructure::generateRandomGraph(int genderSize) {
-
-}
-
-void GraphStructure::solveTheProblem() {
-
 }
