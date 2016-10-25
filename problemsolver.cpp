@@ -73,6 +73,8 @@ void ProblemSolver::proposeNextGirlForMan(int manIndex) {
         if (!isGirlsActualPairBetter(nextGirlIndex, manIndex)) {
             deleteGirlsActualPair(nextGirlIndex);
             takeTheGirlsHand(manIndex, nextGirlIndex);
+        } {
+            (*menPriorities)[manIndex].removeFirst();
         }
     }
 }
@@ -97,7 +99,7 @@ bool ProblemSolver::isGirlsActualPairBetter(int nextGirlIndex, int manIndex) {
         }
     }
 
-    if (getActualPositionForManInPrefOreder(nextGirlIndex, manIndex) > getActualPositionForManInPrefOreder(nextGirlIndex, manIndex)) {
+    if (getActualPositionForManInPrefOreder(nextGirlIndex, actualManIndex) < getActualPositionForManInPrefOreder(nextGirlIndex, manIndex)) {
         return true;
     } else {
         return false;
