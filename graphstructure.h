@@ -22,7 +22,6 @@ public:
     QList<QList<int>> womenPriorities;
     QString actualSelecterGender;
     int actualSelecterPosition;
-    int prioritySetLength;
     int prioritizerPoint;
     QList<int> actualPriorityPositions;
     std::vector< std::vector<bool> > neighbours;

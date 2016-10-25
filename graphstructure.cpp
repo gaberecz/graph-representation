@@ -13,7 +13,6 @@ GraphStructure::GraphStructure()
 void GraphStructure::addMan(QPoint point) {
     addXYPositions(point.x(), point.y());
     men << elementsXPosition.length() - 1;
-    prioritySetLength = men.length();
     menPriorities << emptyQList;
 }
 
@@ -77,7 +76,7 @@ void GraphStructure::setPrioritiesForElement(int index) {
 
             //qDebug() << menPriorities;
             actualPriorityPositions << index;
-            if (menPriorities[actualSelecterPosition].length() == prioritySetLength) {
+            if (menPriorities[actualSelecterPosition].length() == women.length()) {
                 setPriorityselectorDatasToDefault();
             }
         } else if (actualSelecterGender == "woman" && chosenPointGender != "woman") {
@@ -88,7 +87,7 @@ void GraphStructure::setPrioritiesForElement(int index) {
 
             //qDebug() << womenPriorities;
             actualPriorityPositions << index;
-            if (womenPriorities[actualSelecterPosition].length() == prioritySetLength) {
+            if (womenPriorities[actualSelecterPosition].length() == men.length()) {
                 setPriorityselectorDatasToDefault();
             }
         }

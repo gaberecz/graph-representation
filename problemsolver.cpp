@@ -58,7 +58,14 @@ bool ProblemSolver::everyManHasPair() {
 }
 
 void ProblemSolver::proposeNextGirlForMan(int manIndex) {
-    int nextGirlIndex = menPriorities->value(manIndex).first();
+    int nextGirlIndex = -1;
+    if (!menPriorities->value(manIndex).empty()) {
+        nextGirlIndex = menPriorities->value(manIndex).first();
+    } else {
+        manWomanPairSolution[manIndex] = -2;
+        return;
+    }
+
 
     if (!girlHasPair(nextGirlIndex)) {
         takeTheGirlsHand(manIndex, nextGirlIndex);
@@ -126,7 +133,9 @@ void ProblemSolver::leaveUnnecessaryNeighbours() {
     }
 
     for (int i=0; i<manWomanPairSolution.size(); i++) {
-        (*neighbours).at((*men).at(i)).at((*women).at(manWomanPairSolution[i])) = true;
-        (*neighbours).at((*women).at(manWomanPairSolution[i])).at((*men).at(i)) = true;
+        if (manWomanPairSolution[i] != -2) {
+            (*neighbours).at((*men).at(i)).at((*women).at(manWomanPairSolution[i])) = true;
+            (*neighbours).at((*women).at(manWomanPairSolution[i])).at((*men).at(i)) = true;
+        }
     }
 }

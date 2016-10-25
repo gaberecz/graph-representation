@@ -89,6 +89,11 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event)
                         }
                     }
                 }
+            } else if (mouseEvent->button() == Qt::RightButton) {
+                if (operationState.contains(set_priorities)) {
+                    operationState = set_priorities;
+                    graphStructure.setPriorityselectorDatasToDefault();
+                }
             }
         }
     }
