@@ -11,34 +11,40 @@ class GraphStructure
 {
 public:
     GraphStructure();
+
+    QList<int> manList;
+    QList<int> womanList;
+    int prioritizerPoint;
     QList<int> elementsXPosition;
     QList<int> elementsYPosition;
-
-    QList<int> men;
-    QList<int> women;
-
-    QList<int> emptyQList;
-    QList<QList<int>> menPriorities;
-    QList<QList<int>> womenPriorities;
-    QString actualSelecterGender;
-    int actualSelecterPosition;
-    int prioritizerPoint;
     QList<int> actualPriorityPositions;
+    QList<QList<int>> manPrioritiesList;
+    QList<QList<int>> womanPrioritiesList;
     std::vector< std::vector<bool> > neighbours;
 
     void addMan(QPoint point);
+    bool selectingPriorities();
     void addWoman(QPoint point);
-    void addXYPositions(int xPos, int yPos);
-    void setPrioritiesForElement(int index);
-    QString genderOfXthElement(int indexOfELement);
-    int positionOfXthElementInGenderbasedList(int indexOfELement, QString genderOfList);
     void initNeighboursVector();
+    int insertedElementsNumber();
+    void setPrioritiesForElement(int index);
     void setPriorityselectorDatasToDefault();
     void generatePrioritiesForElement(int index);
 
 private:
+    QString man;
+    QString woman;
+    int initIntValue;
+    QList<int> emptyQList;
+    QString initStringValue;
+    int actualSelecterPosition;
+    QString actualSelecterGender;
+
     void fillNeighbourData();
     int randInt(int low, int high);
+    void addXYPositions(int xPos, int yPos);
+    QString genderOfXthElement(int indexOfELement);
+    int positionOfXthElementInGenderbasedList(int indexOfELement, QString genderOfList);
 };
 
 #endif // GRAPHSTRUCTURE_H

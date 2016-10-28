@@ -1,25 +1,28 @@
 #include "graphstructure.h"
 
-GraphStructure::GraphStructure()
-{
-    actualSelecterPosition = -1;
-    prioritizerPoint = -1;
-    actualSelecterGender = "none";
+GraphStructure::GraphStructure() {
+    initIntValue = -1;
+    initStringValue = "none";
+    man = "man";
+    woman = "woman";
 
+    prioritizerPoint = initIntValue;
+    actualSelecterPosition = initIntValue;
+    actualSelecterGender = initStringValue;
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
 }
 
 void GraphStructure::addMan(QPoint point) {
     addXYPositions(point.x(), point.y());
-    men << elementsXPosition.length() - 1;
-    menPriorities << emptyQList;
+    manList << elementsXPosition.length() - 1;
+    manPrioritiesList << emptyQList;
 }
 
 void GraphStructure::addWoman(QPoint point) {
     addXYPositions(point.x(), point.y());
-    women << elementsXPosition.length() - 1;
-    womenPriorities << emptyQList;
+    womanList << elementsXPosition.length() - 1;
+    womanPrioritiesList << emptyQList;
 }
 
 void GraphStructure::addXYPositions(int xPos, int yPos) {
@@ -28,28 +31,25 @@ void GraphStructure::addXYPositions(int xPos, int yPos) {
 }
 
 QString GraphStructure::genderOfXthElement(int indexOfELement) {
-    for(int i=0; i < men.length(); i++) {
-        if (men[i] == indexOfELement) {
-            return "man";
+    for(int i=0; i < manList.length(); i++) {
+        if (manList[i] == indexOfELement) {
+            return man;
         }
     }
-    for(int i=0; i < women.length(); i++) {
-        if (women[i] == indexOfELement) {
-            return "woman";
-        }
-    }
+
+    return woman;
 }
 
 int GraphStructure::positionOfXthElementInGenderbasedList(int indexOfELement, QString genderOfList) {
-    if (genderOfList == "man") {
-        for(int i=0; i < men.length(); i++) {
-            if (men[i] == indexOfELement) {
+    if (genderOfList == man) {
+        for(int i=0; i < manList.length(); i++) {
+            if (manList[i] == indexOfELement) {
                 return i;
             }
         }
-    } else if (genderOfList == "woman") {
-        for(int i=0; i < women.length(); i++) {
-            if (women[i] == indexOfELement) {
+    } else if (genderOfList == woman) {
+        for(int i=0; i < womanList.length(); i++) {
+            if (womanList[i] == indexOfELement) {
                 return i;
             }
         }
@@ -58,63 +58,63 @@ int GraphStructure::positionOfXthElementInGenderbasedList(int indexOfELement, QS
 
 
 void GraphStructure::setPrioritiesForElement(int index) {
-    if (actualSelecterPosition == -1) {
-        actualSelecterGender = genderOfXthElement(index);
-        //qDebug() << actualSelecterGender;
-        actualSelecterPosition = positionOfXthElementInGenderbasedList(index, actualSelecterGender);
+    if (actualSelecterPosition == initIntValue) {
         prioritizerPoint = index;
-        //qDebug() << actualSelecterPosition;
-
+        actualSelecterGender = genderOfXthElement(index);
+        actualSelecterPosition = positionOfXthElementInGenderbasedList(index, actualSelecterGender);
     } else {
-        QString chosenPointGender = genderOfXthElement(index);
+        QString choosenPointGender = genderOfXthElement(index);
 
-        if (actualSelecterGender == "man" && chosenPointGender != "man") {
-            int pos = positionOfXthElementInGenderbasedList(index, "woman");
-            if (!menPriorities[actualSelecterPosition].contains(pos)) {
-                menPriorities[actualSelecterPosition] << pos;
+        if (actualSelecterGender == man && choosenPointGender != man) {
+            int pos = positionOfXthElementInGenderbasedList(index, woman);
+
+            if (!manPrioritiesList[actualSelecterPosition].contains(pos)) {
+                manPrioritiesList[actualSelecterPosition] << pos;
             }
 
-            //qDebug() << menPriorities;
             actualPriorityPositions << index;
-            if (menPriorities[actualSelecterPosition].length() == women.length()) {
+
+            if (manPrioritiesList[actualSelecterPosition].length() == womanList.length()) {
                 setPriorityselectorDatasToDefault();
             }
-        } else if (actualSelecterGender == "woman" && chosenPointGender != "woman") {
-            int pos = positionOfXthElementInGenderbasedList(index, "man");
-            if (!womenPriorities[actualSelecterPosition].contains(pos)) {
-                womenPriorities[actualSelecterPosition] << pos;
+        } else if (actualSelecterGender == woman && choosenPointGender != woman) {
+            int pos = positionOfXthElementInGenderbasedList(index, man);
+
+            if (!womanPrioritiesList[actualSelecterPosition].contains(pos)) {
+                womanPrioritiesList[actualSelecterPosition] << pos;
             }
 
-            //qDebug() << womenPriorities;
             actualPriorityPositions << index;
-            if (womenPriorities[actualSelecterPosition].length() == men.length()) {
+
+            if (womanPrioritiesList[actualSelecterPosition].length() == manList.length()) {
                 setPriorityselectorDatasToDefault();
             }
         }
     }
 }
 
+//TODO: refactor this, it should use an integer as input for define the priorities length
 void GraphStructure::generatePrioritiesForElement(int index) {
     initNeighboursVector();
     QList<int> possibleElementsList;
 
-    for (int i=0; i<women.size(); i++) {
+    for (int i=0; i<womanList.size(); i++) {
         possibleElementsList << i;
     }
 
     while (possibleElementsList.size() != 0) {
         int randomIndex = randInt(0,possibleElementsList.size() - 1);
-        menPriorities[index] << possibleElementsList[randomIndex];
+        manPrioritiesList[index] << possibleElementsList[randomIndex];
         possibleElementsList.removeAt(randomIndex);
     }
 
-    for (int i=0; i<men.size(); i++) {
+    for (int i=0; i<manList.size(); i++) {
         possibleElementsList << i;
     }
 
     while (possibleElementsList.size() != 0) {
         int randomIndex = randInt(0,possibleElementsList.size() - 1);
-        womenPriorities[index] << possibleElementsList[randomIndex];
+        womanPrioritiesList[index] << possibleElementsList[randomIndex];
         possibleElementsList.removeAt(randomIndex);
     }
 
@@ -126,30 +126,28 @@ int GraphStructure::randInt(int low, int high) {
 }
 
 void GraphStructure::setPriorityselectorDatasToDefault() {
-    actualSelecterPosition = -1;
-    actualSelecterGender = "none";
-    actualPriorityPositions.clear();
     fillNeighbourData();
-    qDebug() << "everething set to def";
+    prioritizerPoint = initIntValue;
+    actualSelecterPosition = initIntValue;
+    actualSelecterGender = initStringValue;
+    actualPriorityPositions.clear();
 }
 
 void GraphStructure::fillNeighbourData() {
-    for (int i=0; i < menPriorities.length(); i++) {
-        for (int j=0; j < womenPriorities.length(); j++) {
-            if (menPriorities[i].contains(j) && womenPriorities[j].contains(i)) {
-                neighbours[men[i]][women[j]] = true;
-                neighbours[women[j]][men[i]] = true;
+    for (int i=0; i < manPrioritiesList.length(); i++) {
+        for (int j=0; j < womanPrioritiesList.length(); j++) {
+            if (manPrioritiesList[i].contains(j) && womanPrioritiesList[j].contains(i)) {
+                neighbours[manList[i]][womanList[j]] = true;
+                neighbours[womanList[j]][manList[i]] = true;
             }
         }
     }
-
-    qDebug() << neighbours;
 }
 
 void GraphStructure::initNeighboursVector() {
-    neighbours.resize(elementsXPosition.length());
-    for (int i=0;i<elementsXPosition.length();i++) {
-        neighbours[i].resize(elementsXPosition.length());
+    neighbours.resize(insertedElementsNumber());
+    for (int i=0;i<insertedElementsNumber();i++) {
+        neighbours[i].resize(insertedElementsNumber());
     }
 
     for (int i=0; i < neighbours.size(); i++) {
@@ -158,5 +156,12 @@ void GraphStructure::initNeighboursVector() {
         }
     }
 
-    qDebug() << neighbours;
+}
+
+int GraphStructure::insertedElementsNumber() {
+    return elementsXPosition.length();
+}
+
+bool GraphStructure::selectingPriorities() {
+    return actualSelecterPosition != -1;
 }

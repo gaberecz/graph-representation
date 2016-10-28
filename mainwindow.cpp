@@ -10,13 +10,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     drawer = ui->widget;
 
-    connect(ui->action_insert_man, SIGNAL(triggered()), this, SLOT(insertMan()));
-    connect(ui->action_insert_woman, SIGNAL(triggered()), this, SLOT(insertWoman()));
-    connect(ui->action_reset_all_data, SIGNAL(triggered()), this, SLOT(resetAllData()));
-    connect(ui->action_set_priorities_of, SIGNAL(triggered()), this, SLOT(setPrioritiesOf()));
-    //connect(ui->action_set_max_prio_length, SIGNAL(triggered()), this, SLOT(setPrioritiesOf()));
+    connect(ui->action_insert_man, SIGNAL(triggered()), this, SLOT(setStateToInsertMan()));
+    connect(ui->action_insert_woman, SIGNAL(triggered()), this, SLOT(setStateToInsertWoman()));
+    connect(ui->action_reset_all_data, SIGNAL(triggered()), this, SLOT(resetAllDataForDraw()));
+    connect(ui->action_set_priorities_of, SIGNAL(triggered()), this, SLOT(setPrioritiesOfElement()));
     connect(ui->action_generate_random_graph, SIGNAL(triggered()), this, SLOT(generateRandomGraph()));
-    connect(ui->action_solve_the_problem, SIGNAL(triggered()), this, SLOT(solverTheProblem()));
+    connect(ui->action_solve_the_problem, SIGNAL(triggered()), this, SLOT(solverPairingProblem()));
 
 
     dialog = new Dialog(this);
@@ -27,21 +26,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::insertMan() {
-    drawer->operationState = drawer->insert_man;
+void MainWindow::setStateToInsertMan() {
+    drawer->setState(drawer->state_insert_man);
 }
 
-void MainWindow::insertWoman() {
-    drawer->operationState = drawer->insert_woman;
+void MainWindow::setStateToInsertWoman() {
+    drawer->setState(drawer->state_insert_woman);
 }
 
-void MainWindow::resetAllData() {
+void MainWindow::resetAllDataForDraw() {
     drawer->resetAllData();
 }
 
-void MainWindow::setPrioritiesOf() {
-    drawer->operationState = drawer->set_priorities;
-    drawer->graphStructure.initNeighboursVector();
+void MainWindow::setPrioritiesOfElement() {
+    drawer->setState(drawer->state_set_priorities);
 }
 
 void MainWindow::generateRandomGraph() {
@@ -50,6 +48,6 @@ void MainWindow::generateRandomGraph() {
     }
 }
 
-void MainWindow::solverTheProblem() {
-    drawer->solveTheProblem();
+void MainWindow::solverPairingProblem() {
+    drawer->solver->solvePairingProblem();
 }

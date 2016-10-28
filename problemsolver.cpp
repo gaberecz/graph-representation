@@ -1,30 +1,28 @@
 #include "problemsolver.h"
 
-ProblemSolver::ProblemSolver(QList<int>* men, QList<int>* women, QList<QList<int> >* menPriorities, QList<QList<int> >* womenPriorities, std::vector< std::vector<bool> >* neighbours)
+ProblemSolver::ProblemSolver(QList<int>* manList, QList<int>* womanList, QList<QList<int> >* manPrioritiesList, QList<QList<int> >* womanPrioritiesList, std::vector< std::vector<bool> >* neighbours)
 {
-    this->men = men;
-    this->women = women;
-    this->menPriorities = menPriorities;
-    this->womenPriorities = womenPriorities;
+    initIntValue = -1;
+    this->manList = manList;
+    this->womanList = womanList;
     this->neighbours = neighbours;
+    this->manPrioritiesList = manPrioritiesList;
+    this->womanPrioritiesList = womanPrioritiesList;
 }
 
-void ProblemSolver::solveTheProblem() {
+void ProblemSolver::solvePairingProblem() {
 
     initManWomanPairSolution();
-    qDebug() << manWomanPairSolution;
 
     while(!everyManHasPair()) {
         for (int i=0; i < manWomanPairSolution.size(); i++) {
-            if (manWomanPairSolution[i] == -1) {
+            if (manWomanPairSolution[i] == initIntValue) {
                 proposeNextGirlForMan(i);
             }
         }
     }
 
     leaveUnnecessaryNeighbours();
-
-    qDebug() << manWomanPairSolution;
 }
 
 int ProblemSolver::getActualPairForMan(int manIndex) {
@@ -32,16 +30,16 @@ int ProblemSolver::getActualPairForMan(int manIndex) {
 }
 
 int ProblemSolver::getActualPositionForManInPrefOreder(int prefIndex, int manIndex) {
-    for (int i=0; i<(*womenPriorities)[prefIndex].length(); i++) {
-        if (womenPriorities->value(prefIndex)[i] == manIndex) {
+    for (int i=0; i<(*womanPrioritiesList)[prefIndex].length(); i++) {
+        if (womanPrioritiesList->value(prefIndex)[i] == manIndex) {
             return i;
         }
     }
 }
 
 int ProblemSolver::getActualPositionForWomanInPrefOreder(int prefIndex, int womanIndex) {
-    for (int i=0; i<(*menPriorities)[prefIndex].length(); i++) {
-        if (menPriorities->value(prefIndex)[i] == womanIndex) {
+    for (int i=0; i<(*manPrioritiesList)[prefIndex].length(); i++) {
+        if (manPrioritiesList->value(prefIndex)[i] == womanIndex) {
             return i;
         }
     }
@@ -49,7 +47,7 @@ int ProblemSolver::getActualPositionForWomanInPrefOreder(int prefIndex, int woma
 
 bool ProblemSolver::everyManHasPair() {
     for (int i=0; i<manWomanPairSolution.size(); i++) {
-        if (getActualPairForMan(i) == -1) {
+        if (getActualPairForMan(i) == initIntValue) {
             return false;
         }
     }
@@ -58,9 +56,9 @@ bool ProblemSolver::everyManHasPair() {
 }
 
 void ProblemSolver::proposeNextGirlForMan(int manIndex) {
-    int nextGirlIndex = -1;
-    if (!menPriorities->value(manIndex).empty()) {
-        nextGirlIndex = menPriorities->value(manIndex).first();
+    int nextGirlIndex = initIntValue;
+    if (!manPrioritiesList->value(manIndex).empty()) {
+        nextGirlIndex = manPrioritiesList->value(manIndex).first();
     } else {
         manWomanPairSolution[manIndex] = -2;
         return;
@@ -74,14 +72,14 @@ void ProblemSolver::proposeNextGirlForMan(int manIndex) {
             deleteGirlsActualPair(nextGirlIndex);
             takeTheGirlsHand(manIndex, nextGirlIndex);
         } {
-            (*menPriorities)[manIndex].removeFirst();
+            (*manPrioritiesList)[manIndex].removeFirst();
         }
     }
 }
 
-bool ProblemSolver::girlHasPair(int nextGirlIndex) {
+bool ProblemSolver::girlHasPair(int girlIndex) {
     for (int i=0; i<manWomanPairSolution.size(); i++) {
-        if (manWomanPairSolution[i] == nextGirlIndex) {
+        if (manWomanPairSolution[i] == girlIndex) {
             return true;
         }
     }
@@ -90,7 +88,7 @@ bool ProblemSolver::girlHasPair(int nextGirlIndex) {
 }
 
 bool ProblemSolver::isGirlsActualPairBetter(int nextGirlIndex, int manIndex) {
-    int actualManIndex = -1;
+    int actualManIndex = initIntValue;
 
     for (int i=0; i<manWomanPairSolution.size(); i++) {
         if (manWomanPairSolution[i] == nextGirlIndex) {
@@ -109,21 +107,21 @@ bool ProblemSolver::isGirlsActualPairBetter(int nextGirlIndex, int manIndex) {
 void ProblemSolver::deleteGirlsActualPair(int nextGirlIndex) {
     for (int i=0; i<manWomanPairSolution.size(); i++) {
         if (manWomanPairSolution[i] == nextGirlIndex) {
-            manWomanPairSolution[i] = -1;
+            manWomanPairSolution[i] = initIntValue;
         }
     }
 }
 
 void ProblemSolver::takeTheGirlsHand(int manIndex, int nextGirlIndex) {
     manWomanPairSolution[manIndex] = nextGirlIndex;
-    (*menPriorities)[manIndex].removeFirst();
+    (*manPrioritiesList)[manIndex].removeFirst();
 }
 
 void ProblemSolver::initManWomanPairSolution() {
-    manWomanPairSolution.resize(men->length());
+    manWomanPairSolution.resize(manList->length());
 
     for (int i=0; i< manWomanPairSolution.size(); i++) {
-        manWomanPairSolution[i] = -1;
+        manWomanPairSolution[i] = initIntValue;
     }
 }
 
@@ -136,8 +134,8 @@ void ProblemSolver::leaveUnnecessaryNeighbours() {
 
     for (int i=0; i<manWomanPairSolution.size(); i++) {
         if (manWomanPairSolution[i] != -2) {
-            (*neighbours).at((*men).at(i)).at((*women).at(manWomanPairSolution[i])) = true;
-            (*neighbours).at((*women).at(manWomanPairSolution[i])).at((*men).at(i)) = true;
+            (*neighbours).at((*manList).at(i)).at((*womanList).at(manWomanPairSolution[i])) = true;
+            (*neighbours).at((*womanList).at(manWomanPairSolution[i])).at((*manList).at(i)) = true;
         }
     }
 }

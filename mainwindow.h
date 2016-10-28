@@ -25,12 +25,12 @@ public:
     Drawer* drawer;
 
 public slots:
-    void insertMan();
-    void insertWoman();
-    void resetAllData();
-    void setPrioritiesOf();
+    void setStateToInsertMan();
+    void setStateToInsertWoman();
+    void resetAllDataForDraw();
+    void setPrioritiesOfElement();
     void generateRandomGraph();
-    void solverTheProblem();
+    void solverPairingProblem();
 };
 
 #endif // MAINWINDOW_H

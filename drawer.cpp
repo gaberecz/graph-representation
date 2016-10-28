@@ -5,19 +5,19 @@ Drawer::Drawer(QWidget *parent) :
 {
     installEventFilter(this);
     setMouseTracking(true);
-    insert_man = "insert_man";
-    insert_woman = "insert_woman";
-    set_priorities = "set_priorities";
-    operationState = "";
+    state_insert_man = "insert_man";
+    state_insert_woman = "insert_woman";
+    state_set_priorities = "set_priorities";
+    currentState = "";
 
-    QTimer* timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(5);
+    QTimer* redrawTimer = new QTimer(this);
+    connect(redrawTimer, SIGNAL(timeout()), this, SLOT(update()));
+    redrawTimer->start(5);
 
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
 
-    radius = 40;
+    circleRadius = 40;
 }
 
 void Drawer::paintEvent(QPaintEvent *event) {
@@ -31,67 +31,36 @@ void Drawer::paintEvent(QPaintEvent *event) {
     painter.setFont(font);
 
     painter.setBrush(QBrush("#cccbc9"));
-    painter.drawRect(radius/2,radius/2,this->width()-radius,this->height()-radius);
+    painter.drawRect(0, 0, this->width(), this->height());
 
-    if (!graphStructure.neighbours.empty()) {
-        for (int i=0; i<graphStructure.neighbours.size(); i++) {
-            for (int j=0; j<graphStructure.neighbours.size(); j++) {
-                //if (i < j) {
-                    if (graphStructure.neighbours[i][j]) {
-                        painter.drawLine(QPoint(graphStructure.elementsXPosition[i], graphStructure.elementsYPosition[i]),QPoint(graphStructure.elementsXPosition[j], graphStructure.elementsYPosition[j]));
-                    }
-                //} else {
-                //    break;;
-                //}
-            }
-        }
-    }
-
-    painter.setBrush(QBrush("#2BB9FF"));
-    for (int i=0; i< graphStructure.men.length();i++) {
-        DrawEll(graphStructure.elementsXPosition[graphStructure.men[i]]-radius/2, graphStructure.elementsYPosition[graphStructure.men[i]]-radius/2, radius, &painter, i);
-    }
-
-    painter.setBrush(QBrush("#E41818"));
-    for (int i=0; i< graphStructure.women.length();i++) {
-        DrawEll(graphStructure.elementsXPosition[graphStructure.women[i]]-radius/2, graphStructure.elementsYPosition[graphStructure.women[i]]-radius/2, radius, &painter, i);
-    }
-
-
-    painter.setBrush(QBrush("#00FF44"));
-    if (graphStructure.actualSelecterPosition != -1) {
-        DrawEll(graphStructure.elementsXPosition[graphStructure.prioritizerPoint]-radius/2, graphStructure.elementsYPosition[graphStructure.prioritizerPoint]-radius/2, radius, &painter);
-
-        painter.setBrush(QBrush("#FFFF00"));
-        for (int i=0; i < graphStructure.actualPriorityPositions.length(); i++) {
-            DrawEll(graphStructure.elementsXPosition[graphStructure.actualPriorityPositions[i]]-radius/2, graphStructure.elementsYPosition[graphStructure.actualPriorityPositions[i]]-radius/2, radius, &painter, i);
-        }
-    }
+    linkGraphElements(&painter);
+    drawManElements(&painter);
+    drawWomanElements(&painter);
+    drawPrioritySelecterElementAndPrioritizedElements(&painter);
 }
 
 bool Drawer::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QMouseEvent::MouseMove)
-    {
+    if (event->type() == QMouseEvent::MouseMove) {
         cursorPosition = this->mapFromGlobal(QCursor::pos());
     } else {
         if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
                 if (cursorpositionInBorder(cursorPosition)) {
-                    if (operationState == insert_man) {
+                    if (currentState == state_insert_man) {
                         graphStructure.addMan(Knocking(cursorPosition));
-                    } else if (operationState == insert_woman) {
+                    } else if (currentState == state_insert_woman) {
                         graphStructure.addWoman(Knocking(cursorPosition));
-                    } else if (operationState.contains(set_priorities)) {
+                    } else if (currentState.contains(state_set_priorities)) {
                         if (clickedOnElement(cursorPosition.x(), cursorPosition.y())) {
                             graphStructure.setPrioritiesForElement(indexOfClickedElement(cursorPosition));
                         }
                     }
                 }
             } else if (mouseEvent->button() == Qt::RightButton) {
-                if (operationState.contains(set_priorities)) {
-                    operationState = set_priorities;
+                if (currentState.contains(state_set_priorities)) {
+                    currentState = state_set_priorities;
                     graphStructure.setPriorityselectorDatasToDefault();
                 }
             }
@@ -100,58 +69,54 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event)
 }
 
 bool Drawer::cursorpositionInBorder(QPoint CursorPosition) {
-    return CursorPosition.x() > radius/2 && CursorPosition.y() > radius/2 && CursorPosition.x() < (this->width() - radius/2) && CursorPosition.y() < (this->height() - radius/2);
+    return CursorPosition.x() > circleRadius/2 && CursorPosition.y() > circleRadius/2 && CursorPosition.x() < (this->width() - circleRadius/2) && CursorPosition.y() < (this->height() - circleRadius/2);
 }
 
-void Drawer::DrawEll(double x, double y, double radius, QPainter* painter, int i) {
-    DrawEll(x, y, radius, painter);
+void Drawer::DrawEll(double x, double y, double circleRadius, QPainter* painter, int i) {
+    DrawEll(x, y, circleRadius, painter);
 
     if (i < 9) {
-        painter->drawText(QPoint(x + radius / 40 * 13, y + radius / 4 * 3), QString::number(i + 1));
+        painter->drawText(QPoint(x + circleRadius / 40 * 13, y + circleRadius / 4 * 3), QString::number(i + 1));
     } else {
         if (i<99)
-        painter->drawText(QPoint(x + radius / 40 * 7, y + radius / 4 * 3), QString::number(i + 1));
+        painter->drawText(QPoint(x + circleRadius / 40 * 7, y + circleRadius / 4 * 3), QString::number(i + 1));
         else {
             QFont font = painter->font();
             font.setPointSize(16);
             painter->setFont(font);
-            painter->drawText(QPoint(x + radius / 13, y + radius / 4 * 3), QString::number(i + 1));
+            painter->drawText(QPoint(x + circleRadius / 13, y + circleRadius / 4 * 3), QString::number(i + 1));
             font.setPointSize(18);
             painter->setFont(font);
         }
     }
 }
 
-void Drawer::DrawEll(double x, double y, double radius, QPainter* painter) {
-    QRectF rectangle(x, y, radius, radius);
+void Drawer::DrawEll(double x, double y, double circleRadius, QPainter* painter) {
+    QRectF rectangle(x, y, circleRadius, circleRadius);
     painter->drawEllipse(rectangle);
 }
 
 QPoint Drawer::Knocking(QPoint point) {
 
-    qDebug() << point;
-    int actualXPosition = point.x();
-    int actualYPosition = point.y();
+    int actualInsertionXPosition = point.x();
+    int actualInsertionYPosition = point.y();
     QString tryThisDirection = "";
 
-    if (graphStructure.elementsXPosition.length() == 0) {
+    if (graphStructure.insertedElementsNumber() == 0) {
         return point;
     }
 
-    while (clickedOnElement(actualXPosition, actualYPosition)) {
+    while (clickedOnElement(actualInsertionXPosition, actualInsertionYPosition)) {
         if (randInt(0,2) != 2) {
             if (randInt(0,1) == 0) {
                 if (tryThisDirection != "move_right") {
-                    qDebug() << "moveLeft";
-                    actualXPosition -= 25;
+                    actualInsertionXPosition -= circleRadius / 2;
                     tryThisDirection = "move_left";
-
                 }
 
             } else {
                 if (tryThisDirection != "move_left") {
-                    qDebug() << "moveRight";
-                    actualXPosition += 25;
+                    actualInsertionXPosition += circleRadius / 2;
                     tryThisDirection = "move_right";
                 }
 
@@ -159,15 +124,13 @@ QPoint Drawer::Knocking(QPoint point) {
         } else {
             if (randInt(0,1) == 0) {
                 if (tryThisDirection != "move_down") {
-                    qDebug() << "moveUP";
-                    actualYPosition -= 25;
+                    actualInsertionYPosition -= circleRadius / 2;
                     tryThisDirection = "move_up";
                 }
 
             } else {
                 if (tryThisDirection != "move_up") {
-                    qDebug() << "moveDown";
-                    actualYPosition += 25;
+                    actualInsertionYPosition += circleRadius / 2;
                     tryThisDirection = "move_down";
                 }
 
@@ -175,8 +138,8 @@ QPoint Drawer::Knocking(QPoint point) {
         }
     }
 
-    if (cursorpositionInBorder(QPoint(actualXPosition, actualYPosition))) {
-        return QPoint(actualXPosition, actualYPosition);
+    if (cursorpositionInBorder(QPoint(actualInsertionXPosition, actualInsertionYPosition))) {
+        return QPoint(actualInsertionXPosition, actualInsertionYPosition);
     } else {
         return Knocking(point);
     }
@@ -187,13 +150,10 @@ bool Drawer::clickedOnElement(int actualXPosition, int actualYPosition) {
     QList<int> engagedYPositions = graphStructure.elementsYPosition;
     int notDisturbedElementsNumber = 0;
 
-    while (notDisturbedElementsNumber <= (engagedXPositions.length())) {
-        for (int i=0; i<engagedXPositions.length() ;i++) {
-            if (actualXPosition >= engagedXPositions[i] - radius && actualXPosition <= engagedXPositions[i] + radius && actualYPosition >= engagedYPositions[i] - radius && actualYPosition <= engagedYPositions[i] + radius) {
-                if (qPow(engagedXPositions[i] - actualXPosition, 2) + qPow(engagedYPositions[i] - actualYPosition, 2) <= qPow( 1.5 * radius ,2)) {
-                    qDebug() << "element knocked";
-                    return true;
-                }
+    while (notDisturbedElementsNumber != graphStructure.insertedElementsNumber()) {
+        for (int i=0; i<graphStructure.insertedElementsNumber(); i++) {
+            if (actualXPosition >= engagedXPositions[i] - circleRadius && actualXPosition <= engagedXPositions[i] + circleRadius && actualYPosition >= engagedYPositions[i] - circleRadius && actualYPosition <= engagedYPositions[i] + circleRadius) {
+                return true;
             } else {
                 notDisturbedElementsNumber++;
             }
@@ -211,7 +171,7 @@ int Drawer::indexOfClickedElement(QPoint actualPosition) {
     int positionOfPoint = -1;
 
     for (int i=0; i<engagedXPositions.length() ;i++) {
-        if (actualXPosition >= engagedXPositions[i] - radius && actualXPosition <= engagedXPositions[i] + radius && actualYPosition >= engagedYPositions[i] - radius && actualYPosition <= engagedYPositions[i] + radius) {
+        if (actualXPosition >= engagedXPositions[i] - circleRadius && actualXPosition <= engagedXPositions[i] + circleRadius && actualYPosition >= engagedYPositions[i] - circleRadius && actualYPosition <= engagedYPositions[i] + circleRadius) {
             return i;
         }
     }
@@ -222,23 +182,21 @@ int Drawer::randInt(int low, int high) {
 }
 
 void Drawer::resetAllData() {
-    operationState = "";
+    currentState = "";
     graphStructure.elementsXPosition.clear();
     graphStructure.elementsYPosition.clear();
-    graphStructure.men.clear();
-    graphStructure.women.clear();
-    graphStructure.menPriorities.clear();
-    graphStructure.womenPriorities.clear();
+    graphStructure.manList.clear();
+    graphStructure.womanList.clear();
+    graphStructure.manPrioritiesList.clear();
+    graphStructure.womanPrioritiesList.clear();
     graphStructure.neighbours.clear();
     graphStructure.setPriorityselectorDatasToDefault();
 }
 
 void Drawer::generateRandomGraph(int gendergroupSize) {
-    //graphStructure.addMan(QPoint(this->width() / 2, this->height() / 2));
-    //graphStructure.addWoman(Knocking(QPoint(this->width() / 2, this->height() / 2)));
 
     for (int i=0; i < gendergroupSize; i++) {
-        //this->width();
+        //TODO: refactor this element addition mechanism
         graphStructure.addMan(Knocking(QPoint(this->width() / 2, this->height() / 2)));
         graphStructure.addWoman(Knocking(QPoint(this->width() / 2, this->height() / 2)));
     }
@@ -248,6 +206,48 @@ void Drawer::generateRandomGraph(int gendergroupSize) {
     }
 }
 
-void Drawer::solveTheProblem() {
-    solver->solveTheProblem();
+void Drawer::linkGraphElements(QPainter* painter) {
+    if (!graphStructure.neighbours.empty()) {
+        for (int i=0; i<graphStructure.neighbours.size(); i++) {
+            for (int j=0; j<graphStructure.neighbours.size(); j++) {
+                if (graphStructure.neighbours[i][j]) {
+                    painter->drawLine(QPoint(graphStructure.elementsXPosition[i], graphStructure.elementsYPosition[i]),QPoint(graphStructure.elementsXPosition[j], graphStructure.elementsYPosition[j]));
+                }
+            }
+        }
+    }
+}
+
+void Drawer::drawManElements(QPainter* painter) {
+    painter->setBrush(QBrush("#2BB9FF"));
+    for (int i=0; i< graphStructure.manList.length();i++) {
+        DrawEll(graphStructure.elementsXPosition[graphStructure.manList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.manList[i]]-circleRadius/2, circleRadius, painter, i);
+    }
+}
+
+void Drawer::drawWomanElements(QPainter* painter) {
+    painter->setBrush(QBrush("#E41818"));
+    for (int i=0; i< graphStructure.womanList.length();i++) {
+        DrawEll(graphStructure.elementsXPosition[graphStructure.womanList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.womanList[i]]-circleRadius/2, circleRadius, painter, i);
+    }
+}
+
+void Drawer::drawPrioritySelecterElementAndPrioritizedElements(QPainter* painter) {
+    painter->setBrush(QBrush("#00FF44"));
+    if (graphStructure.selectingPriorities()) {
+        DrawEll(graphStructure.elementsXPosition[graphStructure.prioritizerPoint]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.prioritizerPoint]-circleRadius/2, circleRadius, painter);
+
+        painter->setBrush(QBrush("#FFFF00"));
+        for (int i=0; i < graphStructure.actualPriorityPositions.length(); i++) {
+            DrawEll(graphStructure.elementsXPosition[graphStructure.actualPriorityPositions[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.actualPriorityPositions[i]]-circleRadius/2, circleRadius, painter, i);
+        }
+    }
+}
+
+void Drawer::setState(QString state) {
+    currentState = state;
+
+    if (state == state_set_priorities) {
+        graphStructure.initNeighboursVector();
+    }
 }
