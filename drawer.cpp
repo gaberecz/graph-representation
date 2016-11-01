@@ -193,7 +193,7 @@ void Drawer::resetAllData() {
     graphStructure.setPriorityselectorDatasToDefault();
 }
 
-void Drawer::generateRandomGraph(int gendergroupSize) {
+/*void Drawer::generateRandomGraph(int gendergroupSize) {
 
     for (int i=0; i < gendergroupSize; i++) {
         //TODO: refactor this element addition mechanism
@@ -204,7 +204,7 @@ void Drawer::generateRandomGraph(int gendergroupSize) {
     for (int i=0; i < gendergroupSize; i++) {
         graphStructure.generatePrioritiesForElement(i);
     }
-}
+}*/
 
 void Drawer::linkGraphElements(QPainter* painter) {
     if (!graphStructure.neighbours.empty()) {
@@ -251,3 +251,4 @@ void Drawer::setState(QString state) {
         graphStructure.initNeighboursVector();
     }
 }
+

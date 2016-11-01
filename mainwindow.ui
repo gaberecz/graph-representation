@@ -44,7 +44,12 @@
     <addaction name="separator"/>
     <addaction name="action_insert_man"/>
     <addaction name="action_insert_woman"/>
+    <addaction name="separator"/>
+    <addaction name="action_insert_men"/>
+    <addaction name="action_insert_women"/>
+    <addaction name="separator"/>
     <addaction name="action_set_priorities_of"/>
+    <addaction name="action_generate_priorities"/>
     <addaction name="separator"/>
     <addaction name="action_generate_random_graph"/>
     <addaction name="action_solve_the_problem"/>
@@ -133,6 +138,21 @@
   <action name="action_solve_the_problem">
    <property name="text">
     <string>Solve the problem</string>
+   </property>
+  </action>
+  <action name="action_insert_men">
+   <property name="text">
+    <string>Insert men</string>
+   </property>
+  </action>
+  <action name="action_insert_women">
+   <property name="text">
+    <string>Insert women</string>
+   </property>
+  </action>
+  <action name="action_generate_priorities">
+   <property name="text">
+    <string>Generate priorities</string>
    </property>
   </action>
  </widget>

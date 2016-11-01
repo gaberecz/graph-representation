@@ -21,6 +21,7 @@
 class Drawer : public QWidget
 {
 public:
+    double circleRadius;
     QString state_insert_man;
     QString state_insert_woman;
     QString state_set_priorities;
@@ -29,12 +30,14 @@ public:
     void resetAllData();
     void setPrioritiesOf();
     Drawer(QWidget *parent = 0);
-    void setState(QString state);
+    void setState(QString state);    
+    void inserXMan(int number);
+    void inserXWoman(int number);
     void generateRandomGraph(int gendergroupSize);
+    void generatePriorities(bool isPrioListRandom);
     ProblemSolver* solver = new ProblemSolver(&graphStructure.manList, &graphStructure.womanList, &graphStructure.manPrioritiesList, &graphStructure.womanPrioritiesList, &graphStructure.neighbours);
 
 private:
-    double circleRadius;
     QString currentState;
     QPoint cursorPosition;
 
@@ -48,6 +51,7 @@ private:
     bool eventFilter(QObject *obj, QEvent *event);
     int indexOfClickedElement(QPoint cursorPosition);
     bool cursorpositionInBorder(QPoint cursorPosition);
+    void insertGenderElement(QString gender, int number);
     bool clickedOnElement(int actualXPosition, int actualYPosition);
     void DrawEll(double x, double y, double circleRadius, QPainter* painter);
     void drawPrioritySelecterElementAndPrioritizedElements(QPainter* painter);

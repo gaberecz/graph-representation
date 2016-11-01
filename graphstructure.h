@@ -29,7 +29,9 @@ public:
     int insertedElementsNumber();
     void setPrioritiesForElement(int index);
     void setPriorityselectorDatasToDefault();
-    void generatePrioritiesForElement(int index);
+    void generatePrioritiesForElements(bool isPrioListRandom);
+    void insertXMan(int number, int width, int height, int circleRadius);
+    void insertXWoman(int number, int width, int height, int circleRadius);
 
 private:
     QString man;
@@ -45,6 +47,7 @@ private:
     void addXYPositions(int xPos, int yPos);
     QString genderOfXthElement(int indexOfELement);
     int positionOfXthElementInGenderbasedList(int indexOfELement, QString genderOfList);
+    void insertGenderElement(QString gender, int number, int width, int height, int circleRadius);
 };
 
 #endif // GRAPHSTRUCTURE_H

@@ -17,13 +17,16 @@ SOURCES += main.cpp\
     drawer.cpp \
     graphstructure.cpp \
     dialog.cpp \
-    problemsolver.cpp
+    problemsolver.cpp \
+    prioritiesdialog.cpp
 
 HEADERS  += mainwindow.h \
     drawer.h \
     graphstructure.h \
     dialog.h \
-    problemsolver.h
+    problemsolver.h \
+    prioritiesdialog.h
 
 FORMS    += mainwindow.ui \
-    dialog.ui
+    dialog.ui \
+    prioritiesdialog.ui

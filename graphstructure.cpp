@@ -93,34 +93,6 @@ void GraphStructure::setPrioritiesForElement(int index) {
     }
 }
 
-//TODO: refactor this, it should use an integer as input for define the priorities length
-void GraphStructure::generatePrioritiesForElement(int index) {
-    initNeighboursVector();
-    QList<int> possibleElementsList;
-
-    for (int i=0; i<womanList.size(); i++) {
-        possibleElementsList << i;
-    }
-
-    while (possibleElementsList.size() != 0) {
-        int randomIndex = randInt(0,possibleElementsList.size() - 1);
-        manPrioritiesList[index] << possibleElementsList[randomIndex];
-        possibleElementsList.removeAt(randomIndex);
-    }
-
-    for (int i=0; i<manList.size(); i++) {
-        possibleElementsList << i;
-    }
-
-    while (possibleElementsList.size() != 0) {
-        int randomIndex = randInt(0,possibleElementsList.size() - 1);
-        womanPrioritiesList[index] << possibleElementsList[randomIndex];
-        possibleElementsList.removeAt(randomIndex);
-    }
-
-    fillNeighbourData();
-}
-
 int GraphStructure::randInt(int low, int high) {
     return qrand() % ((high + 1) - low) + low;
 }
@@ -164,4 +136,89 @@ int GraphStructure::insertedElementsNumber() {
 
 bool GraphStructure::selectingPriorities() {
     return actualSelecterPosition != -1;
+}
+
+
+
+void GraphStructure::insertXMan(int number, int width, int height, int circleRadius) {
+    insertGenderElement(man, number, width, height, circleRadius);
+}
+
+void GraphStructure::insertXWoman(int number, int width, int height, int circleRadius) {
+    insertGenderElement(woman, number, width, height, circleRadius);
+}
+
+void GraphStructure::insertGenderElement(QString gender, int number, int width, int height, int circleRadius) {
+    int insertionXPosition = circleRadius / 2 + 5;
+    int insertionYPosition = circleRadius / 2 + 5;
+
+    if (gender == woman) {
+        insertionYPosition = height - circleRadius / 2 - 5;
+    }
+
+    for (int i=0; i<number; i++) {
+        if (gender == man) {
+            addMan(QPoint(insertionXPosition, insertionYPosition));
+        } else if (gender == woman) {
+            addWoman(QPoint(insertionXPosition, insertionYPosition));
+        }
+
+        if (insertionXPosition + circleRadius < width) {
+            insertionXPosition += circleRadius + 5;
+        } else {
+            insertionXPosition = circleRadius / 2 + 5;
+            if (gender == man) {
+                insertionYPosition += circleRadius + 5;
+            } else if (gender == woman) {
+                insertionYPosition -= circleRadius + 5;
+            }
+        }
+
+    }
+}
+
+void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom) {
+    initNeighboursVector();
+
+    for (int i=0; i<manPrioritiesList.size(); i++) {
+        QList<int> possibleElementsList;
+        int prioListLength =womanList.size();
+
+        if (isPrioListRandom) {
+            prioListLength = randInt(0, womanList.size());
+        }
+
+        for (int i=0; i<womanList.size(); i++) {
+            possibleElementsList << i;
+        }
+
+        while (manPrioritiesList[i].size() != prioListLength) {
+            int randomIndex = randInt(0,possibleElementsList.size() - 1);
+            manPrioritiesList[i] << possibleElementsList[randomIndex];
+            possibleElementsList.removeAt(randomIndex);
+        }
+    }
+
+    for (int i=0; i<womanPrioritiesList.size(); i++) {
+        QList<int> possibleElementsList;
+        int prioListLength =manList.size();
+
+        if (isPrioListRandom) {
+            prioListLength = randInt(0, manList.size());
+        }
+
+        for (int i=0; i<manList.size(); i++) {
+            possibleElementsList << i;
+        }
+
+        while (womanPrioritiesList[i].size() != prioListLength) {
+            int randomIndex = randInt(0,possibleElementsList.size() - 1);
+            womanPrioritiesList[i] << possibleElementsList[randomIndex];
+            possibleElementsList.removeAt(randomIndex);
+        }
+    }
+
+
+
+    fillNeighbourData();
 }

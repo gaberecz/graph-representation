@@ -14,11 +14,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_insert_woman, SIGNAL(triggered()), this, SLOT(setStateToInsertWoman()));
     connect(ui->action_reset_all_data, SIGNAL(triggered()), this, SLOT(resetAllDataForDraw()));
     connect(ui->action_set_priorities_of, SIGNAL(triggered()), this, SLOT(setPrioritiesOfElement()));
-    connect(ui->action_generate_random_graph, SIGNAL(triggered()), this, SLOT(generateRandomGraph()));
     connect(ui->action_solve_the_problem, SIGNAL(triggered()), this, SLOT(solverPairingProblem()));
-
+    connect(ui->action_insert_men, SIGNAL(triggered()), this, SLOT(insertXMan()));
+    connect(ui->action_insert_women, SIGNAL(triggered()), this, SLOT(insertXWoman()));
+    connect(ui->action_generate_priorities, SIGNAL(triggered()), this, SLOT(generatePriorities()));
 
     dialog = new Dialog(this);
+    prioDialog = new PrioritiesDialog(this);
 }
 
 MainWindow::~MainWindow()
@@ -42,12 +44,24 @@ void MainWindow::setPrioritiesOfElement() {
     drawer->setState(drawer->state_set_priorities);
 }
 
-void MainWindow::generateRandomGraph() {
+void MainWindow::solverPairingProblem() {
+    drawer->solver->solvePairingProblem();
+}
+
+void MainWindow::insertXMan() {
     if (dialog->exec() == QDialog::Accepted) {
-        drawer->generateRandomGraph(dialog->getSize());
+        drawer->graphStructure.insertXMan(dialog->getSize(), drawer->width(), drawer->height(), drawer->circleRadius);
     }
 }
 
-void MainWindow::solverPairingProblem() {
-    drawer->solver->solvePairingProblem();
+void MainWindow::insertXWoman() {
+    if (dialog->exec() == QDialog::Accepted) {
+        drawer->graphStructure.insertXWoman(dialog->getSize(), drawer->width(), drawer->height(), drawer->circleRadius);
+    }
+}
+
+void MainWindow::generatePriorities() {
+    if (prioDialog->exec() == QDialog::Accepted) {
+        drawer->graphStructure.generatePrioritiesForElements(prioDialog->isPriolistLengthRandom());
+    }
 }

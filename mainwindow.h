@@ -5,6 +5,7 @@
 #include "drawer.h"
 #include <QDebug>
 #include "dialog.h"
+#include "prioritiesdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +22,7 @@ public:
 private:
     Ui::MainWindow *ui;
     Dialog* dialog;
+    PrioritiesDialog* prioDialog;
 public:
     Drawer* drawer;
 
@@ -29,8 +31,10 @@ public slots:
     void setStateToInsertWoman();
     void resetAllDataForDraw();
     void setPrioritiesOfElement();
-    void generateRandomGraph();
     void solverPairingProblem();
+    void insertXMan();
+    void insertXWoman();
+    void generatePriorities();
 };
 
 #endif // MAINWINDOW_H
