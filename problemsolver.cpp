@@ -71,7 +71,7 @@ void ProblemSolver::proposeNextGirlForMan(int manIndex) {
         if (!isGirlsActualPairBetter(nextGirlIndex, manIndex)) {
             deleteGirlsActualPair(nextGirlIndex);
             takeTheGirlsHand(manIndex, nextGirlIndex);
-        } {
+        } else {
             (*manPrioritiesList)[manIndex].removeFirst();
         }
     }
@@ -136,6 +136,26 @@ void ProblemSolver::leaveUnnecessaryNeighbours() {
         if (manWomanPairSolution[i] != -2) {
             (*neighbours).at((*manList).at(i)).at((*womanList).at(manWomanPairSolution[i])) = true;
             (*neighbours).at((*womanList).at(manWomanPairSolution[i])).at((*manList).at(i)) = true;
+        }
+    }
+}
+
+void ProblemSolver::leaveUnnecessaryElementsFromPrioLists() {
+    for (int i=0; i<manPrioritiesList->size(); i++) {
+        for (int j=0; j<(*manPrioritiesList)[i].size(); j++) {
+            if (!(*womanPrioritiesList)[(*manPrioritiesList)[i][j]].contains(i)) {
+                (*manPrioritiesList)[i].removeAt(j);
+                j--;
+            }
+        }
+    }
+
+    for (int i=0; i<womanPrioritiesList->size(); i++) {
+        for (int j=0; j<(*womanPrioritiesList)[i].size(); j++) {
+            if (!(*manPrioritiesList)[(*womanPrioritiesList)[i][j]].contains(i)) {
+                (*womanPrioritiesList)[i].removeAt(j);
+                j--;
+            }
         }
     }
 }

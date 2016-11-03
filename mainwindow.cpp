@@ -45,6 +45,7 @@ void MainWindow::setPrioritiesOfElement() {
 }
 
 void MainWindow::solverPairingProblem() {
+    drawer->solver->leaveUnnecessaryElementsFromPrioLists();
     drawer->solver->solvePairingProblem();
 }
 
