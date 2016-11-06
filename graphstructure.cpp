@@ -177,15 +177,14 @@ void GraphStructure::insertGenderElement(QString gender, int number, int width, 
     }
 }
 
-void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom) {
+void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom, int prioListLength) {
     initNeighboursVector();
 
     for (int i=0; i<manPrioritiesList.size(); i++) {
         QList<int> possibleElementsList;
-        int prioListLength =womanList.size();
 
         if (isPrioListRandom) {
-            prioListLength = randInt(0, womanList.size());
+            prioListLength = randInt(0, prioListLength);
         }
 
         for (int i=0; i<womanList.size(); i++) {
@@ -201,10 +200,9 @@ void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom) {
 
     for (int i=0; i<womanPrioritiesList.size(); i++) {
         QList<int> possibleElementsList;
-        int prioListLength =manList.size();
 
         if (isPrioListRandom) {
-            prioListLength = randInt(0, manList.size());
+            prioListLength = randInt(0, prioListLength);
         }
 
         for (int i=0; i<manList.size(); i++) {
@@ -217,8 +215,6 @@ void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom) {
             possibleElementsList.removeAt(randomIndex);
         }
     }
-
-
 
     fillNeighbourData();
 }

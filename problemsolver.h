@@ -14,6 +14,8 @@ public:
     void leaveUnnecessaryElementsFromPrioLists();
 
     int sbsNextMan;
+    std::vector<int> manWomanPairSolution;
+    void cleanWomanPrioritiesAfterWorkDone();
 
 private:
     int initIntValue;
@@ -22,7 +24,6 @@ private:
     QList<int>* emptyQList;
     QList<QList<int>>* manPrioritiesList;
     QList<QList<int>>* womanPrioritiesList;
-    std::vector<int> manWomanPairSolution;
     std::vector< std::vector<bool> >* neighbours;
 
     bool everyManHasPair();

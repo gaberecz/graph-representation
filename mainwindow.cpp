@@ -47,8 +47,10 @@ void MainWindow::setPrioritiesOfElement() {
 }
 
 void MainWindow::solverPairingProblem() {
+    drawer->setState(drawer->state_solution_step_by_step);
     drawer->solver->leaveUnnecessaryElementsFromPrioLists();
     drawer->solver->solvePairingProblem();
+    drawer->solver->cleanWomanPrioritiesAfterWorkDone();
 }
 
 void MainWindow::insertXMan() {
@@ -65,7 +67,7 @@ void MainWindow::insertXWoman() {
 
 void MainWindow::generatePriorities() {
     if (prioDialog->exec() == QDialog::Accepted) {
-        drawer->graphStructure.generatePrioritiesForElements(prioDialog->isPriolistLengthRandom());
+        drawer->graphStructure.generatePrioritiesForElements(prioDialog->isPriolistLengthRandom(), prioDialog->getSize());
     }
 }
 

@@ -27,7 +27,6 @@ void ProblemSolver::solvePairingProblem() {
 }
 
 void ProblemSolver::solvePairingProblemNextStep() {
-
     if (sbsNextMan == manWomanPairSolution.size()) {
         sbsNextMan = 0;
     }
@@ -36,15 +35,26 @@ void ProblemSolver::solvePairingProblemNextStep() {
         if (manWomanPairSolution[sbsNextMan] == initIntValue) {
             proposeNextGirlForMan(sbsNextMan);
         }
-    } else {
-        qDebug() << "Every man has pair'";
-        sbsNextMan != -2;
     }
+
+    if (everyManHasPair()) {
+        sbsNextMan = -2;
+    }
+
     if (sbsNextMan != -2) {
         sbsNextMan++;
     }
     qDebug() << manWomanPairSolution;
     leaveUnnecessaryNeighbours();
+
+}
+
+void ProblemSolver::cleanWomanPrioritiesAfterWorkDone() {
+    for (int i=0; i < womanPrioritiesList->size(); i++) {
+        if (!girlHasPair(i)) {
+            (*womanPrioritiesList)[i].clear();
+        }
+    }
 }
 
 int ProblemSolver::getActualPairForMan(int manIndex) {

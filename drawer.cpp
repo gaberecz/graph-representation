@@ -75,18 +75,39 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
         if (keyEvent->key() == Qt::Key_Right) {
-            if (currentState == state_solution_step_by_step) {
-                if (secondLeftArrowButtonPush) {
-                    graphStructure.setPriorityselectorDatasToDefault();
-                    solver->solvePairingProblemNextStep();
-                    secondLeftArrowButtonPush = false;
-                } else {
-                    if (solver->sbsNextMan != graphStructure.manList.size()) {
-                        //graphStructure.actualPriorityPositions = graphStructure.manPrioritiesList[solver->sbsNextMan];
-                        //graphStructure.actualSelecterPosition = graphStructure.positionOfXthElementInGenderbasedList(solver->sbsNextMan, "man");
+            if (solver->sbsNextMan != -2) {
+                if (currentState == state_solution_step_by_step) {
+                    if (secondLeftArrowButtonPush) {
+                        graphStructure.setPriorityselectorDatasToDefault();
+                        solver->solvePairingProblemNextStep();
+                        if (solver->sbsNextMan != -2) {
+                            while (solver->manWomanPairSolution[solver->sbsNextMan] > -1) {
+                                solver->sbsNextMan++;
+                                if (solver->sbsNextMan == graphStructure.manList.size()) {
+                                    solver->sbsNextMan = 0;
+                                }
+                                qDebug() <<solver->sbsNextMan;
+                            }
+
+                            qDebug() <<solver->sbsNextMan;
+                        }
+
+                        secondLeftArrowButtonPush = false;
+                    } else {
+                        if (solver->sbsNextMan != solver->manWomanPairSolution.size()) {
+                            graphStructure.actualSelecterGender = "man";
+                            graphStructure.prioritizerPoint = solver->sbsNextMan;
+                            graphStructure.actualSelecterPosition = graphStructure.positionOfXthElementInGenderbasedList(solver->sbsNextMan, "man");
+                            for (int i=0; i < graphStructure.manPrioritiesList[solver->sbsNextMan].size(); i++) {
+                                graphStructure.actualPriorityPositions << graphStructure.womanList[graphStructure.manPrioritiesList[solver->sbsNextMan][i]];
+                            }
+
+                            secondLeftArrowButtonPush = true;
+                        }
                     }
-                    secondLeftArrowButtonPush = true;
                 }
+            } else {
+                solver->cleanWomanPrioritiesAfterWorkDone();
             }
         }
     }
@@ -215,6 +236,7 @@ void Drawer::resetAllData() {
     graphStructure.womanPrioritiesList.clear();
     graphStructure.neighbours.clear();
     graphStructure.setPriorityselectorDatasToDefault();
+    solver->sbsNextMan = 0;
 }
 
 void Drawer::linkGraphElements(QPainter* painter) {
@@ -230,15 +252,23 @@ void Drawer::linkGraphElements(QPainter* painter) {
 }
 
 void Drawer::drawManElements(QPainter* painter) {
-    painter->setBrush(QBrush("#2BB9FF"));
     for (int i=0; i< graphStructure.manList.length();i++) {
+        if (currentState == state_solution_step_by_step && solver->manWomanPairSolution[i] == -2) {
+            painter->setBrush(QBrush("#990099"));
+        } else {
+            painter->setBrush(QBrush("#2BB9FF"));
+        }
         DrawEll(graphStructure.elementsXPosition[graphStructure.manList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.manList[i]]-circleRadius/2, circleRadius, painter, i);
     }
 }
 
 void Drawer::drawWomanElements(QPainter* painter) {
-    painter->setBrush(QBrush("#E41818"));
     for (int i=0; i< graphStructure.womanList.length();i++) {
+        if (currentState == state_solution_step_by_step && graphStructure.womanPrioritiesList[i].isEmpty()) {
+            painter->setBrush(QBrush("#990099"));
+        } else {
+            painter->setBrush(QBrush("#E41818"));
+        }
         DrawEll(graphStructure.elementsXPosition[graphStructure.womanList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.womanList[i]]-circleRadius/2, circleRadius, painter, i);
     }
 }
@@ -246,6 +276,7 @@ void Drawer::drawWomanElements(QPainter* painter) {
 void Drawer::drawPrioritySelecterElementAndPrioritizedElements(QPainter* painter) {
 
     if (graphStructure.selectingPriorities()) {
+
         painter->setBrush(QBrush("#00FF44"));
         DrawEll(graphStructure.elementsXPosition[graphStructure.prioritizerPoint]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.prioritizerPoint]-circleRadius/2, circleRadius, painter);
 

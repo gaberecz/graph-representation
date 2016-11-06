@@ -18,6 +18,7 @@ public:
     int actualSelecterPosition;
     QList<int> elementsXPosition;
     QList<int> elementsYPosition;
+    QString actualSelecterGender;
     QList<int> actualPriorityPositions;
     QList<QList<int>> manPrioritiesList;
     QList<QList<int>> womanPrioritiesList;
@@ -30,7 +31,7 @@ public:
     int insertedElementsNumber();
     void setPrioritiesForElement(int index);
     void setPriorityselectorDatasToDefault();
-    void generatePrioritiesForElements(bool isPrioListRandom);
+    void generatePrioritiesForElements(bool isPrioListRandom, int prioListLength);
     void insertXMan(int number, int width, int height, int circleRadius);
     void insertXWoman(int number, int width, int height, int circleRadius);
     int positionOfXthElementInGenderbasedList(int indexOfELement, QString genderOfList);
@@ -42,7 +43,6 @@ private:
     QList<int> emptyQList;
     QString initStringValue;
 
-    QString actualSelecterGender;
     void fillNeighbourData();
     int randInt(int low, int high);
     void addXYPositions(int xPos, int yPos);
