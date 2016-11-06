@@ -27,14 +27,15 @@ public:
     Drawer* drawer;
 
 public slots:
-    void setStateToInsertMan();
-    void setStateToInsertWoman();
-    void resetAllDataForDraw();
-    void setPrioritiesOfElement();
-    void solverPairingProblem();
     void insertXMan();
     void insertXWoman();
     void generatePriorities();
+    void resetAllDataForDraw();
+    void setStateToInsertMan();
+    void solverPairingProblem();
+    void setStateToInsertWoman();
+    void setPrioritiesOfElement();
+    void solverPairingProblemStepByStep();
 };
 
 #endif // MAINWINDOW_H

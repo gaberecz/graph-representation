@@ -25,6 +25,7 @@ public:
     QString state_insert_man;
     QString state_insert_woman;
     QString state_set_priorities;
+    QString state_solution_step_by_step;
     GraphStructure graphStructure;
 
     void resetAllData();
@@ -33,6 +34,7 @@ public:
     void setState(QString state);    
     void inserXMan(int number);
     void inserXWoman(int number);
+    void solveTheProblemStepByStep();
     void generateRandomGraph(int gendergroupSize);
     void generatePriorities(bool isPrioListRandom);
     ProblemSolver* solver = new ProblemSolver(&graphStructure.manList, &graphStructure.womanList, &graphStructure.manPrioritiesList, &graphStructure.womanPrioritiesList, &graphStructure.neighbours);
@@ -40,6 +42,7 @@ public:
 private:
     QString currentState;
     QPoint cursorPosition;
+    bool secondLeftArrowButtonPush;
 
     void paintEvent(QPaintEvent* event);
     QPoint Knocking(QPoint point);

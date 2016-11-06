@@ -51,7 +51,7 @@
     <addaction name="action_set_priorities_of"/>
     <addaction name="action_generate_priorities"/>
     <addaction name="separator"/>
-    <addaction name="action_generate_random_graph"/>
+    <addaction name="action_solve_the_problem_step_by_step"/>
     <addaction name="action_solve_the_problem"/>
    </widget>
    <addaction name="menuOperations"/>
@@ -130,9 +130,9 @@
     <string>Set max prio length</string>
    </property>
   </action>
-  <action name="action_generate_random_graph">
+  <action name="action_solve_the_problem_step_by_step">
    <property name="text">
-    <string>Generate random graph</string>
+    <string>Solve the problem step by step</string>
    </property>
   </action>
   <action name="action_solve_the_problem">

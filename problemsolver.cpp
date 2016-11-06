@@ -3,6 +3,7 @@
 ProblemSolver::ProblemSolver(QList<int>* manList, QList<int>* womanList, QList<QList<int> >* manPrioritiesList, QList<QList<int> >* womanPrioritiesList, std::vector< std::vector<bool> >* neighbours)
 {
     initIntValue = -1;
+    sbsNextMan = 0;
     this->manList = manList;
     this->womanList = womanList;
     this->neighbours = neighbours;
@@ -22,6 +23,27 @@ void ProblemSolver::solvePairingProblem() {
         }
     }
 
+    leaveUnnecessaryNeighbours();
+}
+
+void ProblemSolver::solvePairingProblemNextStep() {
+
+    if (sbsNextMan == manWomanPairSolution.size()) {
+        sbsNextMan = 0;
+    }
+
+    if (!everyManHasPair()) {
+        if (manWomanPairSolution[sbsNextMan] == initIntValue) {
+            proposeNextGirlForMan(sbsNextMan);
+        }
+    } else {
+        qDebug() << "Every man has pair'";
+        sbsNextMan != -2;
+    }
+    if (sbsNextMan != -2) {
+        sbsNextMan++;
+    }
+    qDebug() << manWomanPairSolution;
     leaveUnnecessaryNeighbours();
 }
 
@@ -133,7 +155,7 @@ void ProblemSolver::leaveUnnecessaryNeighbours() {
     }
 
     for (int i=0; i<manWomanPairSolution.size(); i++) {
-        if (manWomanPairSolution[i] != -2) {
+        if (manWomanPairSolution[i] != -2 && manWomanPairSolution[i] != -1) {
             (*neighbours).at((*manList).at(i)).at((*womanList).at(manWomanPairSolution[i])) = true;
             (*neighbours).at((*womanList).at(manWomanPairSolution[i])).at((*manList).at(i)) = true;
         }

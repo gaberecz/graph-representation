@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_insert_men, SIGNAL(triggered()), this, SLOT(insertXMan()));
     connect(ui->action_insert_women, SIGNAL(triggered()), this, SLOT(insertXWoman()));
     connect(ui->action_generate_priorities, SIGNAL(triggered()), this, SLOT(generatePriorities()));
+    connect(ui->action_solve_the_problem_step_by_step, SIGNAL(triggered()), this, SLOT(solverPairingProblemStepByStep()));
+
 
     dialog = new Dialog(this);
     prioDialog = new PrioritiesDialog(this);
@@ -65,4 +67,9 @@ void MainWindow::generatePriorities() {
     if (prioDialog->exec() == QDialog::Accepted) {
         drawer->graphStructure.generatePrioritiesForElements(prioDialog->isPriolistLengthRandom());
     }
+}
+
+void MainWindow::solverPairingProblemStepByStep() {
+    drawer->solver->leaveUnnecessaryElementsFromPrioLists();
+    drawer->solveTheProblemStepByStep();
 }

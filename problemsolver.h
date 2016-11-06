@@ -9,7 +9,11 @@ class ProblemSolver
 public:
     ProblemSolver(QList<int>* manList, QList<int>* womanList, QList<QList<int> >* manPrioritiesList, QList<QList<int> >* womanPrioritiesList, std::vector< std::vector<bool> >* neighbours);
     void solvePairingProblem();
+    void initManWomanPairSolution();
+    void solvePairingProblemNextStep();
     void leaveUnnecessaryElementsFromPrioLists();
+
+    int sbsNextMan;
 
 private:
     int initIntValue;
@@ -23,7 +27,6 @@ private:
 
     bool everyManHasPair();
     void chooseBetterManForWoman();
-    void initManWomanPairSolution();
     void leaveUnnecessaryNeighbours();
     bool girlHasPair(int nextGirlIndex);
     int getActualPairForMan(int manIndex);

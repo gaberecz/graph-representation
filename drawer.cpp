@@ -5,10 +5,13 @@ Drawer::Drawer(QWidget *parent) :
 {
     installEventFilter(this);
     setMouseTracking(true);
+    setFocusPolicy(Qt::StrongFocus);
     state_insert_man = "insert_man";
     state_insert_woman = "insert_woman";
     state_set_priorities = "set_priorities";
+    state_solution_step_by_step = "solution_step_by_step";
     currentState = "";
+    secondLeftArrowButtonPush = false;
 
     QTimer* redrawTimer = new QTimer(this);
     connect(redrawTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -41,6 +44,7 @@ void Drawer::paintEvent(QPaintEvent *event) {
 
 bool Drawer::eventFilter(QObject *obj, QEvent *event)
 {
+
     if (event->type() == QMouseEvent::MouseMove) {
         cursorPosition = this->mapFromGlobal(QCursor::pos());
     } else {
@@ -52,8 +56,9 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event)
                         graphStructure.addMan(Knocking(cursorPosition));
                     } else if (currentState == state_insert_woman) {
                         graphStructure.addWoman(Knocking(cursorPosition));
-                    } else if (currentState.contains(state_set_priorities)) {
+                    } else if (currentState == state_set_priorities) {
                         if (clickedOnElement(cursorPosition.x(), cursorPosition.y())) {
+                            graphStructure.setPriorityselectorDatasToDefault();
                             graphStructure.setPrioritiesForElement(indexOfClickedElement(cursorPosition));
                         }
                     }
@@ -62,6 +67,25 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event)
                 if (currentState.contains(state_set_priorities)) {
                     currentState = state_set_priorities;
                     graphStructure.setPriorityselectorDatasToDefault();
+                }
+            }
+        }
+    }
+
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key() == Qt::Key_Right) {
+            if (currentState == state_solution_step_by_step) {
+                if (secondLeftArrowButtonPush) {
+                    graphStructure.setPriorityselectorDatasToDefault();
+                    solver->solvePairingProblemNextStep();
+                    secondLeftArrowButtonPush = false;
+                } else {
+                    if (solver->sbsNextMan != graphStructure.manList.size()) {
+                        //graphStructure.actualPriorityPositions = graphStructure.manPrioritiesList[solver->sbsNextMan];
+                        //graphStructure.actualSelecterPosition = graphStructure.positionOfXthElementInGenderbasedList(solver->sbsNextMan, "man");
+                    }
+                    secondLeftArrowButtonPush = true;
                 }
             }
         }
@@ -193,19 +217,6 @@ void Drawer::resetAllData() {
     graphStructure.setPriorityselectorDatasToDefault();
 }
 
-/*void Drawer::generateRandomGraph(int gendergroupSize) {
-
-    for (int i=0; i < gendergroupSize; i++) {
-        //TODO: refactor this element addition mechanism
-        graphStructure.addMan(Knocking(QPoint(this->width() / 2, this->height() / 2)));
-        graphStructure.addWoman(Knocking(QPoint(this->width() / 2, this->height() / 2)));
-    }
-
-    for (int i=0; i < gendergroupSize; i++) {
-        graphStructure.generatePrioritiesForElement(i);
-    }
-}*/
-
 void Drawer::linkGraphElements(QPainter* painter) {
     if (!graphStructure.neighbours.empty()) {
         for (int i=0; i<graphStructure.neighbours.size(); i++) {
@@ -233,8 +244,9 @@ void Drawer::drawWomanElements(QPainter* painter) {
 }
 
 void Drawer::drawPrioritySelecterElementAndPrioritizedElements(QPainter* painter) {
-    painter->setBrush(QBrush("#00FF44"));
+
     if (graphStructure.selectingPriorities()) {
+        painter->setBrush(QBrush("#00FF44"));
         DrawEll(graphStructure.elementsXPosition[graphStructure.prioritizerPoint]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.prioritizerPoint]-circleRadius/2, circleRadius, painter);
 
         painter->setBrush(QBrush("#FFFF00"));
@@ -252,3 +264,7 @@ void Drawer::setState(QString state) {
     }
 }
 
+void Drawer::solveTheProblemStepByStep() {
+    currentState = state_solution_step_by_step;
+    solver->initManWomanPairSolution();
+}
