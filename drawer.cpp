@@ -25,25 +25,27 @@ Drawer::Drawer(QWidget *parent) :
 
 void Drawer::paintEvent(QPaintEvent *event) {
 
-    QPen pen;
-    pen.setWidth(2);
     QPainter painter(this);
-    painter.setPen(pen);
-    QFont font = painter.font();
-    font.setPointSize(18);
-    painter.setFont(font);
-
-    painter.setBrush(QBrush("#cccbc9"));
-    painter.drawRect(0, 0, this->width(), this->height());
-
+    drawDrawingplace(&painter);
     linkGraphElements(&painter);
     drawManElements(&painter);
     drawWomanElements(&painter);
     drawPrioritySelecterElementAndPrioritizedElements(&painter);
 }
 
-bool Drawer::eventFilter(QObject *obj, QEvent *event)
-{
+void Drawer::drawDrawingplace(QPainter* painter) {
+    QPen pen;
+    pen.setWidth(2);
+    (*painter).setPen(pen);
+    QFont font = (*painter).font();
+    font.setPointSize(18);
+    (*painter).setFont(font);
+
+    (*painter).setBrush(QBrush("#cccbc9"));
+    (*painter).drawRect(0, 0, this->width(), this->height());
+}
+
+bool Drawer::eventFilter(QObject *obj, QEvent *event) {
 
     if (event->type() == QMouseEvent::MouseMove) {
         cursorPosition = this->mapFromGlobal(QCursor::pos());
@@ -52,21 +54,11 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event)
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
                 if (cursorpositionInBorder(cursorPosition)) {
-                    if (currentState == state_insert_man) {
-                        graphStructure.addMan(Knocking(cursorPosition));
-                    } else if (currentState == state_insert_woman) {
-                        graphStructure.addWoman(Knocking(cursorPosition));
-                    } else if (currentState == state_set_priorities) {
-                        if (clickedOnElement(cursorPosition.x(), cursorPosition.y())) {
-                            graphStructure.setPriorityselectorDatasToDefault();
-                            graphStructure.setPrioritiesForElement(indexOfClickedElement(cursorPosition));
-                        }
-                    }
+                    actionInsertElement();
                 }
             } else if (mouseEvent->button() == Qt::RightButton) {
                 if (currentState.contains(state_set_priorities)) {
-                    currentState = state_set_priorities;
-                    graphStructure.setPriorityselectorDatasToDefault();
+                    actionInterruptPrioritySelection();
                 }
             }
         }
@@ -75,42 +67,69 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
         if (keyEvent->key() == Qt::Key_Right) {
-            if (solver->sbsNextMan != -2) {
+            if (solver->sbsNextMan != solver->statusWillBeLonely) {
                 if (currentState == state_solution_step_by_step) {
                     if (secondLeftArrowButtonPush) {
-                        graphStructure.setPriorityselectorDatasToDefault();
-                        solver->solvePairingProblemNextStep();
-                        if (solver->sbsNextMan != -2) {
-                            while (solver->manWomanPairSolution[solver->sbsNextMan] > -1) {
-                                solver->sbsNextMan++;
-                                if (solver->sbsNextMan == graphStructure.manList.size()) {
-                                    solver->sbsNextMan = 0;
-                                }
-                                qDebug() <<solver->sbsNextMan;
-                            }
-
-                            qDebug() <<solver->sbsNextMan;
-                        }
-
-                        secondLeftArrowButtonPush = false;
+                        drawNextManPairing();
                     } else {
-                        if (solver->sbsNextMan != solver->manWomanPairSolution.size()) {
-                            graphStructure.actualSelecterGender = "man";
-                            graphStructure.prioritizerPoint = solver->sbsNextMan;
-                            graphStructure.actualSelecterPosition = graphStructure.positionOfXthElementInGenderbasedList(solver->sbsNextMan, "man");
-                            for (int i=0; i < graphStructure.manPrioritiesList[solver->sbsNextMan].size(); i++) {
-                                graphStructure.actualPriorityPositions << graphStructure.womanList[graphStructure.manPrioritiesList[solver->sbsNextMan][i]];
-                            }
-
-                            secondLeftArrowButtonPush = true;
-                        }
+                        drawNextPairingElements();
                     }
                 }
             } else {
-                solver->cleanWomanPrioritiesAfterWorkDone();
+                //solver->cleanWomanPrioritiesAfterWorkDone();
             }
         }
     }
+}
+
+void Drawer::drawNextManPairing() {
+    graphStructure.setPriorityselectorDatasToDefault();
+    solver->solvePairingProblemNextStep();
+    if (solver->sbsNextMan != solver->statusWillBeLonely) {
+        while (solver->manWomanPairSolution[solver->sbsNextMan] > -1) {
+            solver->sbsNextMan++;
+            if (solver->sbsNextMan == graphStructure.manList.size()) {
+                solver->sbsNextMan = 0;
+            }
+        }
+    }
+
+    secondLeftArrowButtonPush = false;
+}
+
+void Drawer::drawNextPairingElements() {
+    if (solver->sbsNextMan != solver->manWomanPairSolution.size()) {
+        graphStructure.actualSelecterGender = "man";
+        graphStructure.prioritizerPoint = solver->sbsNextMan;
+        graphStructure.actualSelecterPosition = graphStructure.positionOfXthElementInGenderbasedList(solver->sbsNextMan, "man");
+        for (int i=0; i < graphStructure.manPrioritiesList[solver->sbsNextMan].size(); i++) {
+            graphStructure.actualPriorityPositions << graphStructure.womanList[graphStructure.manPrioritiesList[solver->sbsNextMan][i]];
+        }
+
+        secondLeftArrowButtonPush = true;
+    }
+}
+
+void Drawer::actionInsertElement() {
+    if (currentState == state_insert_man) {
+        graphStructure.addMan(Knocking(cursorPosition));
+    } else if (currentState == state_insert_woman) {
+        graphStructure.addWoman(Knocking(cursorPosition));
+    } else if (currentState == state_set_priorities) {
+        actionSetPriority();
+    }
+}
+
+void Drawer::actionSetPriority() {
+    if (clickedOnElement(cursorPosition.x(), cursorPosition.y())) {
+        graphStructure.setPriorityselectorDatasToDefault();
+        graphStructure.setPrioritiesForElement(indexOfClickedElement(cursorPosition));
+    }
+}
+
+void Drawer::actionInterruptPrioritySelection() {
+    currentState = state_set_priorities;
+    graphStructure.setPriorityselectorDatasToDefault();
 }
 
 bool Drawer::cursorpositionInBorder(QPoint CursorPosition) {
@@ -253,7 +272,7 @@ void Drawer::linkGraphElements(QPainter* painter) {
 
 void Drawer::drawManElements(QPainter* painter) {
     for (int i=0; i< graphStructure.manList.length();i++) {
-        if (currentState == state_solution_step_by_step && solver->manWomanPairSolution[i] == -2) {
+        if (currentState == state_solution_step_by_step && solver->manWomanPairSolution[i] == solver->statusWillBeLonely) {
             painter->setBrush(QBrush("#990099"));
         } else {
             painter->setBrush(QBrush("#2BB9FF"));
@@ -295,7 +314,15 @@ void Drawer::setState(QString state) {
     }
 }
 
+void Drawer::solveTheProblem() {
+    setState(state_solution_step_by_step);
+    solver->leaveUnnecessaryElementsFromPrioLists();
+    solver->solvePairingProblem();
+    solver->cleanWomanPrioritiesAfterWorkDone();
+}
+
 void Drawer::solveTheProblemStepByStep() {
-    currentState = state_solution_step_by_step;
+    solver->leaveUnnecessaryElementsFromPrioLists();
+    setState(state_solution_step_by_step);
     solver->initManWomanPairSolution();
 }

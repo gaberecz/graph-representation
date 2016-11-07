@@ -30,12 +30,10 @@ public:
 
     void resetAllData();
     void setPrioritiesOf();
+    void solveTheProblem();
     Drawer(QWidget *parent = 0);
     void setState(QString state);    
-    void inserXMan(int number);
-    void inserXWoman(int number);
     void solveTheProblemStepByStep();
-    void generateRandomGraph(int gendergroupSize);
     void generatePriorities(bool isPrioListRandom);
     ProblemSolver* solver = new ProblemSolver(&graphStructure.manList, &graphStructure.womanList, &graphStructure.manPrioritiesList, &graphStructure.womanPrioritiesList, &graphStructure.neighbours);
 
@@ -44,13 +42,22 @@ private:
     QPoint cursorPosition;
     bool secondLeftArrowButtonPush;
 
-    void paintEvent(QPaintEvent* event);
+    void actionInsertElement();
+    void actionSetPriority();
+    void drawNextManPairing();
+    void inserXMan(int number);
+    void inserXWoman(int number);
     QPoint Knocking(QPoint point);
+    void drawNextPairingElements();
     int randInt(int low, int high);
     void initManWomanPairSolution();
+    void actionInterruptPrioritySelection();
+    void paintEvent(QPaintEvent* event);
     void drawManElements(QPainter* painter);
+    void drawDrawingplace(QPainter* painter);
     void linkGraphElements(QPainter* painter);
     void drawWomanElements(QPainter* painter);
+    void generateRandomGraph(int gendergroupSize);
     bool eventFilter(QObject *obj, QEvent *event);
     int indexOfClickedElement(QPoint cursorPosition);
     bool cursorpositionInBorder(QPoint cursorPosition);

@@ -4,6 +4,7 @@ ProblemSolver::ProblemSolver(QList<int>* manList, QList<int>* womanList, QList<Q
 {
     initIntValue = -1;
     sbsNextMan = 0;
+    statusWillBeLonely = -2;
     this->manList = manList;
     this->womanList = womanList;
     this->neighbours = neighbours;
@@ -38,10 +39,10 @@ void ProblemSolver::solvePairingProblemNextStep() {
     }
 
     if (everyManHasPair()) {
-        sbsNextMan = -2;
+        sbsNextMan = statusWillBeLonely;
     }
 
-    if (sbsNextMan != -2) {
+    if (sbsNextMan != statusWillBeLonely) {
         sbsNextMan++;
     }
     qDebug() << manWomanPairSolution;
@@ -92,7 +93,7 @@ void ProblemSolver::proposeNextGirlForMan(int manIndex) {
     if (!manPrioritiesList->value(manIndex).empty()) {
         nextGirlIndex = manPrioritiesList->value(manIndex).first();
     } else {
-        manWomanPairSolution[manIndex] = -2;
+        manWomanPairSolution[manIndex] = statusWillBeLonely;
         return;
     }
 
@@ -165,7 +166,7 @@ void ProblemSolver::leaveUnnecessaryNeighbours() {
     }
 
     for (int i=0; i<manWomanPairSolution.size(); i++) {
-        if (manWomanPairSolution[i] != -2 && manWomanPairSolution[i] != -1) {
+        if (manWomanPairSolution[i] != statusWillBeLonely && manWomanPairSolution[i] != initIntValue) {
             (*neighbours).at((*manList).at(i)).at((*womanList).at(manWomanPairSolution[i])) = true;
             (*neighbours).at((*womanList).at(manWomanPairSolution[i])).at((*manList).at(i)) = true;
         }

@@ -14,6 +14,7 @@ public:
     void leaveUnnecessaryElementsFromPrioLists();
 
     int sbsNextMan;
+    int statusWillBeLonely;
     std::vector<int> manWomanPairSolution;
     void cleanWomanPrioritiesAfterWorkDone();
 

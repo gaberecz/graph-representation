@@ -47,10 +47,7 @@ void MainWindow::setPrioritiesOfElement() {
 }
 
 void MainWindow::solverPairingProblem() {
-    drawer->setState(drawer->state_solution_step_by_step);
-    drawer->solver->leaveUnnecessaryElementsFromPrioLists();
-    drawer->solver->solvePairingProblem();
-    drawer->solver->cleanWomanPrioritiesAfterWorkDone();
+    drawer->solveTheProblem();
 }
 
 void MainWindow::insertXMan() {
@@ -72,6 +69,5 @@ void MainWindow::generatePriorities() {
 }
 
 void MainWindow::solverPairingProblemStepByStep() {
-    drawer->solver->leaveUnnecessaryElementsFromPrioLists();
     drawer->solveTheProblemStepByStep();
 }
