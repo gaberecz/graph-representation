@@ -51,8 +51,8 @@
     <addaction name="action_set_priorities_of"/>
     <addaction name="action_generate_priorities"/>
     <addaction name="separator"/>
-    <addaction name="action_solve_the_problem_step_by_step"/>
     <addaction name="action_solve_the_problem"/>
+    <addaction name="action_solve_the_problem_step_by_step"/>
    </widget>
    <addaction name="menuOperations"/>
   </widget>
@@ -107,12 +107,12 @@
   </action>
   <action name="action_insert_man">
    <property name="text">
-    <string>Insert man</string>
+    <string>Insert men one by one</string>
    </property>
   </action>
   <action name="action_insert_woman">
    <property name="text">
-    <string>Insert woman</string>
+    <string>Insert woman one by one</string>
    </property>
   </action>
   <action name="action_reset_all_data">
@@ -122,7 +122,7 @@
   </action>
   <action name="action_set_priorities_of">
    <property name="text">
-    <string>Set priorities of...</string>
+    <string>Set priorities of single element</string>
    </property>
   </action>
   <action name="action_set_max_prio_length">
@@ -142,17 +142,17 @@
   </action>
   <action name="action_insert_men">
    <property name="text">
-    <string>Insert men</string>
+    <string>Insert men automatically</string>
    </property>
   </action>
   <action name="action_insert_women">
    <property name="text">
-    <string>Insert women</string>
+    <string>Insert women automatically</string>
    </property>
   </action>
   <action name="action_generate_priorities">
    <property name="text">
-    <string>Generate priorities</string>
+    <string>Generate priorities of elements</string>
    </property>
   </action>
  </widget>

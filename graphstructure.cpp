@@ -182,16 +182,23 @@ void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom, int pr
 
     for (int i=0; i<manPrioritiesList.size(); i++) {
         QList<int> possibleElementsList;
+        int manPrioListLength;
+
+        if (prioListLength > womanList.size()) {
+            manPrioListLength = womanList.size();
+        } else {
+            manPrioListLength = prioListLength;
+        }
 
         if (isPrioListRandom) {
-            prioListLength = randInt(0, prioListLength);
+            manPrioListLength = randInt(0, manPrioListLength);
         }
 
         for (int i=0; i<womanList.size(); i++) {
             possibleElementsList << i;
         }
 
-        while (manPrioritiesList[i].size() != prioListLength) {
+        while (manPrioritiesList[i].size() != manPrioListLength) {
             int randomIndex = randInt(0,possibleElementsList.size() - 1);
             manPrioritiesList[i] << possibleElementsList[randomIndex];
             possibleElementsList.removeAt(randomIndex);
@@ -200,16 +207,23 @@ void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom, int pr
 
     for (int i=0; i<womanPrioritiesList.size(); i++) {
         QList<int> possibleElementsList;
+        int womanPrioListLength;
+
+        if (prioListLength > manList.size()) {
+            womanPrioListLength = manList.size();
+        } else {
+            womanPrioListLength = prioListLength;
+        }
 
         if (isPrioListRandom) {
-            prioListLength = randInt(0, prioListLength);
+            womanPrioListLength = randInt(0, prioListLength);
         }
 
         for (int i=0; i<manList.size(); i++) {
             possibleElementsList << i;
         }
 
-        while (womanPrioritiesList[i].size() != prioListLength) {
+        while (womanPrioritiesList[i].size() != womanPrioListLength) {
             int randomIndex = randInt(0,possibleElementsList.size() - 1);
             womanPrioritiesList[i] << possibleElementsList[randomIndex];
             possibleElementsList.removeAt(randomIndex);

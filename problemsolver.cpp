@@ -5,6 +5,7 @@ ProblemSolver::ProblemSolver(QList<int>* manList, QList<int>* womanList, QList<Q
     initIntValue = -1;
     sbsNextMan = 0;
     statusWillBeLonely = -2;
+    sbsProcessFinished = -2;
     this->manList = manList;
     this->womanList = womanList;
     this->neighbours = neighbours;
@@ -39,15 +40,14 @@ void ProblemSolver::solvePairingProblemNextStep() {
     }
 
     if (everyManHasPair()) {
-        sbsNextMan = statusWillBeLonely;
+        sbsNextMan = sbsProcessFinished;
     }
 
-    if (sbsNextMan != statusWillBeLonely) {
+    if (sbsNextMan != sbsProcessFinished) {
         sbsNextMan++;
     }
-    qDebug() << manWomanPairSolution;
-    leaveUnnecessaryNeighbours();
 
+    leaveUnnecessaryNeighbours();
 }
 
 void ProblemSolver::cleanWomanPrioritiesAfterWorkDone() {

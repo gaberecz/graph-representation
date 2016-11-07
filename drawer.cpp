@@ -67,7 +67,7 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
         if (keyEvent->key() == Qt::Key_Right) {
-            if (solver->sbsNextMan != solver->statusWillBeLonely) {
+            if (solver->sbsNextMan != solver->sbsProcessFinished) {
                 if (currentState == state_solution_step_by_step) {
                     if (secondLeftArrowButtonPush) {
                         drawNextManPairing();
@@ -76,7 +76,8 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event) {
                     }
                 }
             } else {
-                //solver->cleanWomanPrioritiesAfterWorkDone();
+                graphStructure.actualSelecterPosition = -1;
+                solver->cleanWomanPrioritiesAfterWorkDone();
             }
         }
     }
@@ -85,10 +86,15 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event) {
 void Drawer::drawNextManPairing() {
     graphStructure.setPriorityselectorDatasToDefault();
     solver->solvePairingProblemNextStep();
-    if (solver->sbsNextMan != solver->statusWillBeLonely) {
-        while (solver->manWomanPairSolution[solver->sbsNextMan] > -1) {
+    if (solver->sbsNextMan != solver->sbsProcessFinished) {
+        while (solver->manWomanPairSolution[solver->sbsNextMan] != -1 && !solver->everyManHasPair()) {
+            if (solver->sbsNextMan >= graphStructure.manList.size()) {
+                solver->sbsNextMan = 0;
+            }
+
             solver->sbsNextMan++;
-            if (solver->sbsNextMan == graphStructure.manList.size()) {
+
+            if (solver->sbsNextMan >= graphStructure.manList.size()) {
                 solver->sbsNextMan = 0;
             }
         }
@@ -100,14 +106,14 @@ void Drawer::drawNextManPairing() {
 void Drawer::drawNextPairingElements() {
     if (solver->sbsNextMan != solver->manWomanPairSolution.size()) {
         graphStructure.actualSelecterGender = "man";
-        graphStructure.prioritizerPoint = solver->sbsNextMan;
-        graphStructure.actualSelecterPosition = graphStructure.positionOfXthElementInGenderbasedList(solver->sbsNextMan, "man");
+        graphStructure.prioritizerPoint = graphStructure.manList[solver->sbsNextMan];
+        graphStructure.actualSelecterPosition = graphStructure.positionOfXthElementInGenderbasedList(graphStructure.manList[solver->sbsNextMan], "man");
         for (int i=0; i < graphStructure.manPrioritiesList[solver->sbsNextMan].size(); i++) {
             graphStructure.actualPriorityPositions << graphStructure.womanList[graphStructure.manPrioritiesList[solver->sbsNextMan][i]];
         }
 
-        secondLeftArrowButtonPush = true;
     }
+    secondLeftArrowButtonPush = true;
 }
 
 void Drawer::actionInsertElement() {
@@ -239,6 +245,8 @@ int Drawer::indexOfClickedElement(QPoint actualPosition) {
             return i;
         }
     }
+
+    return -1;
 }
 
 int Drawer::randInt(int low, int high) {
