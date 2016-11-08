@@ -128,7 +128,6 @@ void Drawer::actionInsertElement() {
 
 void Drawer::actionSetPriority() {
     if (clickedOnElement(cursorPosition.x(), cursorPosition.y())) {
-        graphStructure.setPriorityselectorDatasToDefault();
         graphStructure.setPrioritiesForElement(indexOfClickedElement(cursorPosition));
     }
 }
