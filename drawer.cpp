@@ -108,6 +108,7 @@ void Drawer::drawNextPairingElements() {
         graphStructure.actualSelecterGender = "man";
         graphStructure.prioritizerPoint = graphStructure.manList[solver->sbsNextMan];
         graphStructure.actualSelecterPosition = graphStructure.positionOfXthElementInGenderbasedList(graphStructure.manList[solver->sbsNextMan], "man");
+
         for (int i=0; i < graphStructure.manPrioritiesList[solver->sbsNextMan].size(); i++) {
             graphStructure.actualPriorityPositions << graphStructure.womanList[graphStructure.manPrioritiesList[solver->sbsNextMan][i]];
         }
@@ -128,6 +129,7 @@ void Drawer::actionInsertElement() {
 
 void Drawer::actionSetPriority() {
     if (clickedOnElement(cursorPosition.x(), cursorPosition.y())) {
+        //graphStructure.setPriorityselectorDatasToDefault();
         graphStructure.setPrioritiesForElement(indexOfClickedElement(cursorPosition));
     }
 }
