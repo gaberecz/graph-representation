@@ -18,18 +18,18 @@
     <rect>
      <x>10</x>
      <y>20</y>
-     <width>271</width>
+     <width>121</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Kérem adja meg maximum hány elemű legyen a prio lista</string>
+    <string>Elements of priority lists:</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="Size">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>130</x>
      <y>20</y>
      <width>61</width>
      <height>20</height>
@@ -65,14 +65,14 @@
   <widget class="QCheckBox" name="priosRandom">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>30</x>
      <y>40</y>
-     <width>201</width>
-     <height>17</height>
+     <width>331</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Priok hossza random, max fenti szám</string>
+    <string>Randomize the length of the lists (max the prev. defined integer)</string>
    </property>
   </widget>
  </widget>
