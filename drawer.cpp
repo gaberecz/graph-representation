@@ -12,6 +12,7 @@ Drawer::Drawer(QWidget *parent) :
     state_solution_step_by_step = "solution_step_by_step";
     currentState = "";
     secondLeftArrowButtonPush = false;
+    initSetOfLabels();
 
     QTimer* redrawTimer = new QTimer(this);
     connect(redrawTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -38,7 +39,7 @@ void Drawer::drawDrawingplace(QPainter* painter) {
     pen.setWidth(2);
     (*painter).setPen(pen);
     QFont font = (*painter).font();
-    font.setPointSize(18);
+    font.setPointSize(14);
     (*painter).setFont(font);
 
     (*painter).setBrush(QBrush("#cccbc9"));
@@ -53,9 +54,9 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event) {
         if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
             if (mouseEvent->button() == Qt::LeftButton) {
-                if (cursorpositionInBorder(cursorPosition)) {
+                //if (cursorpositionInBorder(cursorPosition)) {
                     actionInsertElement();
-                }
+                //}
             } else if (mouseEvent->button() == Qt::RightButton) {
                 if (currentState.contains(state_set_priorities)) {
                     actionInterruptPrioritySelection();
@@ -79,6 +80,9 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event) {
                 graphStructure.actualSelecterPosition = -1;
                 solver->cleanWomanPrioritiesAfterWorkDone();
             }
+        }
+        if (keyEvent->key() == Qt::Key_Shift) {
+
         }
     }
 }
@@ -119,9 +123,13 @@ void Drawer::drawNextPairingElements() {
 
 void Drawer::actionInsertElement() {
     if (currentState == state_insert_man) {
-        graphStructure.addMan(Knocking(cursorPosition));
+        if (cursorpositionInBorder(cursorPosition)) {
+            graphStructure.addMan(Knocking(cursorPosition));
+        }
     } else if (currentState == state_insert_woman) {
-        graphStructure.addWoman(Knocking(cursorPosition));
+        if (cursorpositionInBorder(cursorPosition)) {
+            graphStructure.addWoman(Knocking(cursorPosition));
+        }
     } else if (currentState == state_set_priorities) {
         actionSetPriority();
     }
@@ -130,7 +138,7 @@ void Drawer::actionInsertElement() {
 void Drawer::actionSetPriority() {
     if (clickedOnElement(cursorPosition.x(), cursorPosition.y())) {
         //graphStructure.setPriorityselectorDatasToDefault();
-        graphStructure.setPrioritiesForElement(indexOfClickedElement(cursorPosition));
+        graphStructure.setPrioritiesForElement(indexOfClickedElement(cursorPosition.x(), cursorPosition.y()));
     }
 }
 
@@ -144,20 +152,19 @@ bool Drawer::cursorpositionInBorder(QPoint CursorPosition) {
 }
 
 void Drawer::DrawEll(double x, double y, double circleRadius, QPainter* painter, int i) {
+    DrawEll(x, y, circleRadius, painter, QString::number(i + 1));
+}
+
+void Drawer::DrawEll(double x, double y, double circleRadius, QPainter* painter, QString label) {
     DrawEll(x, y, circleRadius, painter);
 
-    if (i < 9) {
-        painter->drawText(QPoint(x + circleRadius / 40 * 13, y + circleRadius / 4 * 3), QString::number(i + 1));
+    if (label.length() == 1) {
+        painter->drawText(QPoint(x + circleRadius / 40 * 13, y + circleRadius / 4 * 3), label);
     } else {
-        if (i<99)
-        painter->drawText(QPoint(x + circleRadius / 40 * 7, y + circleRadius / 4 * 3), QString::number(i + 1));
+        if (label.length() == 2)
+        painter->drawText(QPoint(x + circleRadius / 40 * 7, y + circleRadius / 4 * 3), label);
         else {
-            QFont font = painter->font();
-            font.setPointSize(16);
-            painter->setFont(font);
-            painter->drawText(QPoint(x + circleRadius / 13, y + circleRadius / 4 * 3), QString::number(i + 1));
-            font.setPointSize(18);
-            painter->setFont(font);
+            painter->drawText(QPoint(x + circleRadius / 13, y + circleRadius / 4 * 3), label);
         }
     }
 }
@@ -223,7 +230,7 @@ bool Drawer::clickedOnElement(int actualXPosition, int actualYPosition) {
 
     while (notDisturbedElementsNumber != graphStructure.insertedElementsNumber()) {
         for (int i=0; i<graphStructure.insertedElementsNumber(); i++) {
-            if (actualXPosition >= engagedXPositions[i] - circleRadius && actualXPosition <= engagedXPositions[i] + circleRadius && actualYPosition >= engagedYPositions[i] - circleRadius && actualYPosition <= engagedYPositions[i] + circleRadius) {
+            if (actualXPosition >= engagedXPositions[i] - circleRadius*3/2 && actualXPosition <= engagedXPositions[i] + circleRadius/2 && actualYPosition >= engagedYPositions[i] - circleRadius*3/2 && actualYPosition <= engagedYPositions[i] + circleRadius/2) {
                 return true;
             } else {
                 notDisturbedElementsNumber++;
@@ -234,15 +241,12 @@ bool Drawer::clickedOnElement(int actualXPosition, int actualYPosition) {
     return false;
 }
 
-int Drawer::indexOfClickedElement(QPoint actualPosition) {
-    int actualXPosition = actualPosition.x();
-    int actualYPosition = actualPosition.y();
+int Drawer::indexOfClickedElement(int actualXPosition, int actualYPosition) {
     QList<int> engagedXPositions = graphStructure.elementsXPosition;
     QList<int> engagedYPositions = graphStructure.elementsYPosition;
-    int positionOfPoint = -1;
 
     for (int i=0; i<engagedXPositions.length() ;i++) {
-        if (actualXPosition >= engagedXPositions[i] - circleRadius && actualXPosition <= engagedXPositions[i] + circleRadius && actualYPosition >= engagedYPositions[i] - circleRadius && actualYPosition <= engagedYPositions[i] + circleRadius) {
+        if (actualXPosition >= engagedXPositions[i] - circleRadius*3/2 && actualXPosition <= engagedXPositions[i] + circleRadius/2 && actualYPosition >= engagedYPositions[i] - circleRadius*3/2 && actualYPosition <= engagedYPositions[i] + circleRadius/2) {
             return i;
         }
     }
@@ -286,7 +290,7 @@ void Drawer::drawManElements(QPainter* painter) {
         } else {
             painter->setBrush(QBrush("#2BB9FF"));
         }
-        DrawEll(graphStructure.elementsXPosition[graphStructure.manList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.manList[i]]-circleRadius/2, circleRadius, painter, i);
+        DrawEll(graphStructure.elementsXPosition[graphStructure.manList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.manList[i]]-circleRadius/2, circleRadius, painter, RelabelIntegerNumber(i, "man"));
     }
 }
 
@@ -297,7 +301,7 @@ void Drawer::drawWomanElements(QPainter* painter) {
         } else {
             painter->setBrush(QBrush("#E41818"));
         }
-        DrawEll(graphStructure.elementsXPosition[graphStructure.womanList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.womanList[i]]-circleRadius/2, circleRadius, painter, i);
+        DrawEll(graphStructure.elementsXPosition[graphStructure.womanList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.womanList[i]]-circleRadius/2, circleRadius, painter, RelabelIntegerNumber(i, "woman"));
     }
 }
 
@@ -334,4 +338,47 @@ void Drawer::solveTheProblemStepByStep() {
     solver->leaveUnnecessaryElementsFromPrioLists();
     setState(state_solution_step_by_step);
     solver->initManWomanPairSolution();
+}
+
+void Drawer::initSetOfLabels() {
+    labelLettersForMen << "A";
+    labelLettersForMen << "B";
+    labelLettersForMen << "C";
+    labelLettersForMen << "D";
+    labelLettersForMen << "E";
+    labelLettersForMen << "F";
+    labelLettersForMen << "G";
+    labelLettersForMen << "H";
+    labelLettersForMen << "I";
+    labelLettersForMen << "J";
+
+
+    labelLettersForWomen << "N";
+    labelLettersForWomen << "O";
+    labelLettersForWomen << "P";
+    labelLettersForWomen << "Q";
+    labelLettersForWomen << "R";
+    labelLettersForWomen << "S";
+    labelLettersForWomen << "T";
+    labelLettersForWomen << "U";
+    labelLettersForWomen << "V";
+    labelLettersForWomen << "W";
+
+
+}
+
+QString Drawer::RelabelIntegerNumber(int index, QString gender) {
+    QString newLabel = QString::number(index);
+
+    for (int i=0; i<10; i++) {
+        if (gender == "man") {
+            newLabel.replace(QString::number(i), labelLettersForMen[i]);
+        } else {
+            if (gender == "woman") {
+                newLabel.replace(QString::number(i), labelLettersForWomen[i]);
+            }
+        }
+    }
+
+    return newLabel;
 }

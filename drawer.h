@@ -41,31 +41,36 @@ private:
     QString currentState;
     QPoint cursorPosition;
     bool secondLeftArrowButtonPush;
+    QList<QString> labelLettersForMen;
+    QList<QString> labelLettersForWomen;
 
+    void initSetOfLabels();
     void actionInsertElement();
     void actionSetPriority();
     void drawNextManPairing();
     void inserXMan(int number);
     void inserXWoman(int number);
     QPoint Knocking(QPoint point);
+    QString RelabelIntegerNumber(int index, QString gender);
     void drawNextPairingElements();
     int randInt(int low, int high);
     void initManWomanPairSolution();
-    void actionInterruptPrioritySelection();
     void paintEvent(QPaintEvent* event);
+    void actionInterruptPrioritySelection();
     void drawManElements(QPainter* painter);
     void drawDrawingplace(QPainter* painter);
     void linkGraphElements(QPainter* painter);
     void drawWomanElements(QPainter* painter);
     void generateRandomGraph(int gendergroupSize);
     bool eventFilter(QObject *obj, QEvent *event);
-    int indexOfClickedElement(QPoint cursorPosition);
     bool cursorpositionInBorder(QPoint cursorPosition);
     void insertGenderElement(QString gender, int number);
     bool clickedOnElement(int actualXPosition, int actualYPosition);
+    int indexOfClickedElement(int actualXPosition, int actualYPosition);
     void DrawEll(double x, double y, double circleRadius, QPainter* painter);
     void drawPrioritySelecterElementAndPrioritizedElements(QPainter* painter);
     void DrawEll(double x, double y, double circleRadius, QPainter* painter, int i);
+    void DrawEll(double x, double y, double circleRadius, QPainter* painter, QString label);
 };
 
 #endif // DRAWER_H

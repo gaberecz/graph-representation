@@ -70,9 +70,9 @@ void GraphStructure::setPrioritiesForElement(int index) {
 
             if (!manPrioritiesList[actualSelecterPosition].contains(pos)) {
                 manPrioritiesList[actualSelecterPosition] << pos;
+                actualPriorityPositions << index;
             }
 
-            actualPriorityPositions << index;
 
             if (manPrioritiesList[actualSelecterPosition].length() == womanList.length()) {
                 setPriorityselectorDatasToDefault();
@@ -82,9 +82,9 @@ void GraphStructure::setPrioritiesForElement(int index) {
 
             if (!womanPrioritiesList[actualSelecterPosition].contains(pos)) {
                 womanPrioritiesList[actualSelecterPosition] << pos;
+                actualPriorityPositions << index;
             }
 
-            actualPriorityPositions << index;
 
             if (womanPrioritiesList[actualSelecterPosition].length() == manList.length()) {
                 setPriorityselectorDatasToDefault();
