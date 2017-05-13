@@ -382,3 +382,7 @@ QString Drawer::RelabelIntegerNumber(int index, QString gender) {
 
     return newLabel;
 }
+
+void Drawer::drawBlockingEdgesStepByStep(){
+    graphStructure.generateAllPossiblePairing();
+}

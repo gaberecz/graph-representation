@@ -36,6 +36,7 @@ public slots:
     void setStateToInsertWoman();
     void setPrioritiesOfElement();
     void solverPairingProblemStepByStep();
+    void drawBlockingEdges();
 };
 
 #endif // MAINWINDOW_H

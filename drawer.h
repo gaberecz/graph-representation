@@ -34,6 +34,7 @@ public:
     Drawer(QWidget *parent = 0);
     void setState(QString state);    
     void solveTheProblemStepByStep();
+    void drawBlockingEdgesStepByStep();
     void generatePriorities(bool isPrioListRandom);
     ProblemSolver* solver = new ProblemSolver(&graphStructure.manList, &graphStructure.womanList, &graphStructure.manPrioritiesList, &graphStructure.womanPrioritiesList, &graphStructure.neighbours);
 

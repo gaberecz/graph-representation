@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_insert_women, SIGNAL(triggered()), this, SLOT(insertXWoman()));
     connect(ui->action_generate_priorities, SIGNAL(triggered()), this, SLOT(generatePriorities()));
     connect(ui->action_solve_the_problem_step_by_step, SIGNAL(triggered()), this, SLOT(solverPairingProblemStepByStep()));
+    connect(ui->actionCheck_if_problem_contains_pair, SIGNAL(triggered()), this, SLOT(drawBlockingEdges()));
 
 
     dialog = new Dialog(this);
@@ -70,4 +71,8 @@ void MainWindow::generatePriorities() {
 
 void MainWindow::solverPairingProblemStepByStep() {
     drawer->solveTheProblemStepByStep();
+}
+
+void MainWindow::drawBlockingEdges() {
+    drawer->drawBlockingEdgesStepByStep();
 }

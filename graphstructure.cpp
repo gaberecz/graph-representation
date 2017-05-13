@@ -232,3 +232,43 @@ void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom, int pr
 
     fillNeighbourData();
 }
+
+void GraphStructure::generateAllPossiblePairing(){
+    QList<int> elements = emptyQList;
+    for (int i=0; i<manList.length(); i++) {
+        elements << i;
+    }
+    generatePermutation(elements, emptyQList);
+
+    for (int i=0; i<allPossiblePairing.size(); i++) {
+        qDebug() << allPossiblePairing[i];
+    }
+}
+
+void GraphStructure::generatePermutation(QList<int> list, QList<int> permutationPrefix) {
+    if (list.length() == 1) {
+        allPossiblePairing << emptyQList;
+        for (int i=0; i<permutationPrefix.length(); i++) {
+            allPossiblePairing[allPossiblePairing.length() - 1] << permutationPrefix[i];
+        }
+        allPossiblePairing[allPossiblePairing.length() - 1] << list[0];
+    }
+    for (int i=0; i < list.length(); i++) {
+        QList<int> tempPermutationPrefix = emptyQList;
+        QList<int> tempList = emptyQList;
+
+        for (int j=0; j < permutationPrefix.length(); j++) {
+            tempPermutationPrefix << permutationPrefix[j];
+        }
+
+        tempPermutationPrefix << list[i];
+
+        for (int j=0; j < list.length(); j++) {
+            if (i != j) {
+                tempList << list[j];
+            }
+        }
+
+        generatePermutation(tempList, tempPermutationPrefix);
+    }
+}

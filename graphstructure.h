@@ -21,6 +21,7 @@ public:
     QString actualSelecterGender;
     QList<int> actualPriorityPositions;
     QList<QList<int>> manPrioritiesList;
+    QList<QList<int>> allPossiblePairing;
     QList<QList<int>> womanPrioritiesList;
     std::vector< std::vector<bool> > neighbours;
 
@@ -29,6 +30,7 @@ public:
     void addWoman(QPoint point);
     void initNeighboursVector();
     int insertedElementsNumber();
+    void generateAllPossiblePairing();
     void setPrioritiesForElement(int index);
     void setPriorityselectorDatasToDefault();
     void generatePrioritiesForElements(bool isPrioListRandom, int prioListLength);
@@ -46,6 +48,7 @@ private:
     void fillNeighbourData();
     int randInt(int low, int high);
     void addXYPositions(int xPos, int yPos);
+    void generatePermutation(QList<int> list, QList<int> permutationPrefix);
     QString genderOfXthElement(int indexOfELement);
     void insertGenderElement(QString gender, int number, int width, int height, int circleRadius);
 };
