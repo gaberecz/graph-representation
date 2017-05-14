@@ -3,31 +3,38 @@
 
 #include <QList>
 #include <QDebug>
+#include "graphstructure.h"
 
 class ProblemSolver
 {
 public:
-    ProblemSolver(QList<int>* manList, QList<int>* womanList, QList<QList<int> >* manPrioritiesList, QList<QList<int> >* womanPrioritiesList, std::vector< std::vector<bool> >* neighbours);
+    ProblemSolver(/*QList<int>* manList, QList<int>* womanList, QList<QList<int> >* manPrioritiesList, QList<QList<int> >* womanPrioritiesList, std::vector< std::vector<bool> >* neighbours, QList<QList<int>>* blockingPairs*/);
     bool everyManHasPair();
     void solvePairingProblem();
     void initManWomanPairSolution();
     void solvePairingProblemNextStep();
     void leaveUnnecessaryElementsFromPrioLists();
+    void addActualGraphStructure(GraphStructure* graphStructure);
 
     int sbsNextMan;
     int statusWillBeLonely;
     int sbsProcessFinished;
+    void generateAllBlockingPairs();
     std::vector<int> manWomanPairSolution;
     void cleanWomanPrioritiesAfterWorkDone();
 
 private:
     int initIntValue;
-    QList<int>* manList;
+    QList<int> emptyQList;
+    QList<QList<int>> emptyQQList;
+    GraphStructure* graphStructure;
+    /*QList<int>* manList;
     QList<int>* womanList;
     QList<int>* emptyQList;
     QList<QList<int>>* manPrioritiesList;
     QList<QList<int>>* womanPrioritiesList;
     std::vector< std::vector<bool> >* neighbours;
+    QList<QList<int>>* blockingPairs;*/
 
     void chooseBetterManForWoman();
     void leaveUnnecessaryNeighbours();

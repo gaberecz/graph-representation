@@ -9,6 +9,7 @@ Drawer::Drawer(QWidget *parent) :
     state_insert_man = "insert_man";
     state_insert_woman = "insert_woman";
     state_set_priorities = "set_priorities";
+    state_diff_pairs = "looking_for_blocking_pairs";
     state_solution_step_by_step = "solution_step_by_step";
     currentState = "";
     secondLeftArrowButtonPush = false;
@@ -22,6 +23,7 @@ Drawer::Drawer(QWidget *parent) :
     qsrand((uint)time.msec());
 
     circleRadius = 40;
+    pairingId = -1;
 }
 
 void Drawer::paintEvent(QPaintEvent *event) {
@@ -29,6 +31,7 @@ void Drawer::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     drawDrawingplace(&painter);
     linkGraphElements(&painter);
+    drawActualTestPairing(&painter);
     drawManElements(&painter);
     drawWomanElements(&painter);
     drawPrioritySelecterElementAndPrioritizedElements(&painter);
@@ -80,9 +83,40 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event) {
                 graphStructure.actualSelecterPosition = -1;
                 solver->cleanWomanPrioritiesAfterWorkDone();
             }
-        }
-        if (keyEvent->key() == Qt::Key_Shift) {
 
+            if (currentState == state_diff_pairs) {
+                if (pairingId < graphStructure.allPossiblePairing.size() - 1)
+                    pairingId++;
+            }
+        }
+
+        if (keyEvent->key() == Qt::Key_Left) {
+            if (currentState == state_diff_pairs) {
+                if (pairingId > 0)
+                    pairingId--;
+            }
+        }
+
+        if (keyEvent->key() == Qt::Key_Up) {
+            if (currentState == state_diff_pairs) {
+                for (int i=pairingId; i<graphStructure.blockingPairs.size(); i++) {
+                    if (graphStructure.blockingPairs[i].empty()) {
+                        pairingId = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (keyEvent->key() == Qt::Key_Down) {
+            if (currentState == state_diff_pairs) {
+                for (int i=pairingId; i>0; i--) {
+                    if (graphStructure.blockingPairs[i].empty()) {
+                        pairingId = i;
+                        break;
+                    }
+                }
+            }
         }
     }
 }
@@ -267,6 +301,8 @@ void Drawer::resetAllData() {
     graphStructure.manPrioritiesList.clear();
     graphStructure.womanPrioritiesList.clear();
     graphStructure.neighbours.clear();
+    graphStructure.blockingPairs.clear();
+    graphStructure.allPossiblePairing.clear();
     graphStructure.setPriorityselectorDatasToDefault();
     solver->sbsNextMan = 0;
 }
@@ -329,12 +365,14 @@ void Drawer::setState(QString state) {
 
 void Drawer::solveTheProblem() {
     setState(state_solution_step_by_step);
+    solver->addActualGraphStructure(&graphStructure);
     solver->leaveUnnecessaryElementsFromPrioLists();
     solver->solvePairingProblem();
     solver->cleanWomanPrioritiesAfterWorkDone();
 }
 
 void Drawer::solveTheProblemStepByStep() {
+    solver->addActualGraphStructure(&graphStructure);
     solver->leaveUnnecessaryElementsFromPrioLists();
     setState(state_solution_step_by_step);
     solver->initManWomanPairSolution();
@@ -383,6 +421,34 @@ QString Drawer::RelabelIntegerNumber(int index, QString gender) {
     return newLabel;
 }
 
-void Drawer::drawBlockingEdgesStepByStep(){
-    graphStructure.generateAllPossiblePairing();
+void Drawer::generateBlockingEdgesStepByStep(){
+    solver->addActualGraphStructure(&graphStructure);
+    solver->generateAllBlockingPairs();
+    pairingId = 0;
+}
+
+void Drawer::drawActualTestPairing(QPainter* painter) {
+
+
+    if ( currentState == state_diff_pairs && !graphStructure.allPossiblePairing.isEmpty()) {
+
+        for(int indexOfPair=0; indexOfPair < graphStructure.allPossiblePairing[pairingId].size(); indexOfPair++) {
+            painter->setPen(QPen(QColor(Qt::green), 2));
+            painter->drawLine(QPoint(graphStructure.elementsXPosition[graphStructure.manList[indexOfPair]], graphStructure.elementsYPosition[graphStructure.manList[indexOfPair]]),
+                    QPoint(graphStructure.elementsXPosition[graphStructure.womanList[graphStructure.allPossiblePairing[pairingId][indexOfPair]]],
+                            graphStructure.elementsYPosition[graphStructure.womanList[graphStructure.allPossiblePairing[pairingId][indexOfPair]]]));
+        }
+
+        painter->setPen(QPen(QColor(Qt::red), 2));
+        for (int i=0; i<graphStructure.blockingPairs[pairingId].size(); i++) {
+            painter->drawLine(QPoint(graphStructure.elementsXPosition[graphStructure.manList[graphStructure.blockingPairs[pairingId][i][0]]],
+                                     graphStructure.elementsYPosition[graphStructure.manList[graphStructure.blockingPairs[pairingId][i][0]]]),
+                              QPoint(graphStructure.elementsXPosition[graphStructure.womanList[graphStructure.blockingPairs[pairingId][i][1]]],
+                                     graphStructure.elementsYPosition[graphStructure.womanList[graphStructure.blockingPairs[pairingId][i][1]]]));
+        }
+
+        painter->setPen(QPen(QColor(Qt::black), 2));
+
+        painter->drawText(QPoint(this->width() - circleRadius*3/2, circleRadius/2), QString::number(pairingId + 1) + "/" + QString::number(graphStructure.allPossiblePairing.size()));
+    }
 }

@@ -25,6 +25,7 @@ public:
     QString state_insert_man;
     QString state_insert_woman;
     QString state_set_priorities;
+    QString state_diff_pairs;
     QString state_solution_step_by_step;
     GraphStructure graphStructure;
 
@@ -34,11 +35,12 @@ public:
     Drawer(QWidget *parent = 0);
     void setState(QString state);    
     void solveTheProblemStepByStep();
-    void drawBlockingEdgesStepByStep();
+    void generateBlockingEdgesStepByStep();
     void generatePriorities(bool isPrioListRandom);
-    ProblemSolver* solver = new ProblemSolver(&graphStructure.manList, &graphStructure.womanList, &graphStructure.manPrioritiesList, &graphStructure.womanPrioritiesList, &graphStructure.neighbours);
+    ProblemSolver* solver = new ProblemSolver();
 
 private:
+    int pairingId;
     QString currentState;
     QPoint cursorPosition;
     bool secondLeftArrowButtonPush;
@@ -62,6 +64,7 @@ private:
     void drawDrawingplace(QPainter* painter);
     void linkGraphElements(QPainter* painter);
     void drawWomanElements(QPainter* painter);
+    void drawActualTestPairing(QPainter* painter);
     void generateRandomGraph(int gendergroupSize);
     bool eventFilter(QObject *obj, QEvent *event);
     bool cursorpositionInBorder(QPoint cursorPosition);

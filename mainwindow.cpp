@@ -74,5 +74,6 @@ void MainWindow::solverPairingProblemStepByStep() {
 }
 
 void MainWindow::drawBlockingEdges() {
-    drawer->drawBlockingEdgesStepByStep();
+    drawer->setState(drawer->state_diff_pairs);
+    drawer->generateBlockingEdgesStepByStep();
 }

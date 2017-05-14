@@ -22,6 +22,7 @@ public:
     QList<int> actualPriorityPositions;
     QList<QList<int>> manPrioritiesList;
     QList<QList<int>> allPossiblePairing;
+    QList<QList<QList<int>>> blockingPairs;
     QList<QList<int>> womanPrioritiesList;
     std::vector< std::vector<bool> > neighbours;
 
@@ -37,12 +38,14 @@ public:
     void insertXMan(int number, int width, int height, int circleRadius);
     void insertXWoman(int number, int width, int height, int circleRadius);
     int positionOfXthElementInGenderbasedList(int indexOfELement, QString genderOfList);
+    int getXthElementsPositionInYsPreferenceList(int element, QList<int> prefList);
 
 private:
     QString man;
     QString woman;
     int initIntValue;
     QList<int> emptyQList;
+    QList<QList<int>> emptyQQList;
     QString initStringValue;
 
     void fillNeighbourData();

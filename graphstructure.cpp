@@ -205,6 +205,10 @@ void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom, int pr
         }
     }
 
+    for(int i=0; i<manPrioritiesList.size(); i++) {
+        qDebug() << "m_" << i << ": " << manPrioritiesList[i];
+    }
+
     for (int i=0; i<womanPrioritiesList.size(); i++) {
         QList<int> possibleElementsList;
         int womanPrioListLength;
@@ -230,6 +234,10 @@ void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom, int pr
         }
     }
 
+    for(int i=0; i<womanPrioritiesList.size(); i++) {
+        qDebug() << "w_" << i << ": " << womanPrioritiesList[i];
+    }
+
     fillNeighbourData();
 }
 
@@ -239,10 +247,6 @@ void GraphStructure::generateAllPossiblePairing(){
         elements << i;
     }
     generatePermutation(elements, emptyQList);
-
-    for (int i=0; i<allPossiblePairing.size(); i++) {
-        qDebug() << allPossiblePairing[i];
-    }
 }
 
 void GraphStructure::generatePermutation(QList<int> list, QList<int> permutationPrefix) {
@@ -270,5 +274,13 @@ void GraphStructure::generatePermutation(QList<int> list, QList<int> permutation
         }
 
         generatePermutation(tempList, tempPermutationPrefix);
+    }
+}
+
+int GraphStructure::getXthElementsPositionInYsPreferenceList(int element, QList<int> prefList) {
+    for (int i=0; i < prefList.size(); i++) {
+        if (element == prefList[i]) {
+            return i;
+        }
     }
 }
