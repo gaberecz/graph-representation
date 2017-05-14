@@ -100,7 +100,7 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event) {
 
         if (keyEvent->key() == Qt::Key_Up) {
             if (currentState == state_diff_pairs) {
-                for (int i=pairingId; i<graphStructure.blockingPairs.size(); i++) {
+                for (int i=pairingId+1; i<graphStructure.blockingPairs.size(); i++) {
                     if (graphStructure.blockingPairs[i].empty()) {
                         pairingId = i;
                         break;
@@ -111,7 +111,7 @@ bool Drawer::eventFilter(QObject *obj, QEvent *event) {
 
         if (keyEvent->key() == Qt::Key_Down) {
             if (currentState == state_diff_pairs) {
-                for (int i=pairingId; i>0; i--) {
+                for (int i=pairingId-1; i>0; i--) {
                     if (graphStructure.blockingPairs[i].empty()) {
                         pairingId = i;
                         break;
@@ -450,7 +450,7 @@ void Drawer::drawActualTestPairing(QPainter* painter) {
 
         painter->setPen(QPen(QColor(Qt::black), 2));
 
-        painter->drawText(QPoint(this->width() - circleRadius*3/2, circleRadius/2), QString::number(pairingId + 1) + "/" + QString::number(graphStructure.allPossiblePairing.size()));
+        painter->drawText(QPoint(this->width() - circleRadius*1.75, circleRadius/2), QString::number(pairingId + 1) + "/" + QString::number(graphStructure.allPossiblePairing.size()));
     }
 }
 
