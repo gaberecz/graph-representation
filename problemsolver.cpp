@@ -6,6 +6,7 @@ ProblemSolver::ProblemSolver(/*QList<int>* manList, QList<int>* womanList, QList
     sbsNextMan = 0;
     statusWillBeLonely = -2;
     sbsProcessFinished = -2;
+    preferencListReduction = false;
     /*this->manList = manList;
     this->womanList = womanList;
     this->neighbours = neighbours;
@@ -142,6 +143,7 @@ bool ProblemSolver::isGirlsActualPairBetter(int nextGirlIndex, int manIndex) {
 void ProblemSolver::deleteGirlsActualPair(int nextGirlIndex) {
     for (int i=0; i<manWomanPairSolution.size(); i++) {
         if (manWomanPairSolution[i] == nextGirlIndex) {
+            //(*graphStructure).manPrioritiesList[i].removeFirst();
             manWomanPairSolution[i] = initIntValue;
         }
     }
@@ -149,7 +151,10 @@ void ProblemSolver::deleteGirlsActualPair(int nextGirlIndex) {
 
 void ProblemSolver::takeTheGirlsHand(int manIndex, int nextGirlIndex) {
     manWomanPairSolution[manIndex] = nextGirlIndex;
-    (*graphStructure).manPrioritiesList[manIndex].removeFirst();
+    if (preferencListReduction) {
+        reducePrioritiesLists(manIndex, nextGirlIndex);
+    }
+    //(*graphStructure).manPrioritiesList[manIndex].removeFirst();
 }
 
 void ProblemSolver::initManWomanPairSolution() {
@@ -252,5 +257,13 @@ void ProblemSolver::generateAllBlockingPairs() {
 
 void ProblemSolver::addActualGraphStructure(GraphStructure* graphStructure) {
     this->graphStructure = graphStructure;
-    (*this->graphStructure).generateAllPossiblePairing();
+}
+
+void ProblemSolver::reducePrioritiesLists(int manIndex, int nextGirlIndex) {
+    int actualPairIndex = (*graphStructure).womanPrioritiesList[nextGirlIndex].indexOf(manIndex, 0);
+
+    while((*graphStructure).womanPrioritiesList[nextGirlIndex].size() != actualPairIndex + 1) {
+        (*graphStructure).manPrioritiesList[(*graphStructure).womanPrioritiesList[nextGirlIndex].last()].removeAll(nextGirlIndex);
+        (*graphStructure).womanPrioritiesList[nextGirlIndex].removeLast();
+    }
 }

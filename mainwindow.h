@@ -37,6 +37,8 @@ public slots:
     void setPrioritiesOfElement();
     void solverPairingProblemStepByStep();
     void drawBlockingEdges();
+    void makePreferenceListReductionEnabled();
+    void makePreferenceListReductionDisabled();
 };
 
 #endif // MAINWINDOW_H

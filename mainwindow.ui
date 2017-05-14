@@ -48,6 +48,9 @@
     <addaction name="action_insert_men"/>
     <addaction name="action_insert_women"/>
     <addaction name="separator"/>
+    <addaction name="actionMake_preferencelist_reduction_enabled"/>
+    <addaction name="actionMake_preferencelist_reduction_disabled"/>
+    <addaction name="separator"/>
     <addaction name="action_set_priorities_of"/>
     <addaction name="action_generate_priorities"/>
     <addaction name="separator"/>
@@ -160,6 +163,16 @@
   <action name="actionCheck_if_problem_contains_pair">
    <property name="text">
     <string>Check if problem contains pair</string>
+   </property>
+  </action>
+  <action name="actionMake_preferencelist_reduction_enabled">
+   <property name="text">
+    <string>Make preferencelist reduction enabled</string>
+   </property>
+  </action>
+  <action name="actionMake_preferencelist_reduction_disabled">
+   <property name="text">
+    <string>Make preferencelist reduction disabled</string>
    </property>
   </action>
  </widget>

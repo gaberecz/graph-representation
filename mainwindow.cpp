@@ -20,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_generate_priorities, SIGNAL(triggered()), this, SLOT(generatePriorities()));
     connect(ui->action_solve_the_problem_step_by_step, SIGNAL(triggered()), this, SLOT(solverPairingProblemStepByStep()));
     connect(ui->actionCheck_if_problem_contains_pair, SIGNAL(triggered()), this, SLOT(drawBlockingEdges()));
+    connect(ui->actionMake_preferencelist_reduction_enabled, SIGNAL(triggered()), this, SLOT(makePreferenceListReductionEnabled()));
+    connect(ui->actionMake_preferencelist_reduction_disabled, SIGNAL(triggered()), this, SLOT(makePreferenceListReductionDisabled()));
+
 
 
     dialog = new Dialog(this);
@@ -76,4 +79,12 @@ void MainWindow::solverPairingProblemStepByStep() {
 void MainWindow::drawBlockingEdges() {
     drawer->setState(drawer->state_diff_pairs);
     drawer->generateBlockingEdgesStepByStep();
+}
+
+void MainWindow::makePreferenceListReductionEnabled() {
+    drawer->solver->preferencListReduction = true;
+}
+
+void MainWindow::makePreferenceListReductionDisabled() {
+    drawer->solver->preferencListReduction = false;
 }

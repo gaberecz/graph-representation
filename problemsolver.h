@@ -19,6 +19,7 @@ public:
     int sbsNextMan;
     int statusWillBeLonely;
     int sbsProcessFinished;
+    bool preferencListReduction;
     void generateAllBlockingPairs();
     std::vector<int> manWomanPairSolution;
     void cleanWomanPrioritiesAfterWorkDone();
@@ -46,6 +47,7 @@ private:
     bool isGirlsActualPairBetter(int nextGirlIndex, int manIndex);
     int getActualPositionForManInPrefOreder(int prefIndex, int manIndex);
     int getActualPositionForWomanInPrefOreder(int prefIndex, int womanIndex);
+    void reducePrioritiesLists(int manIndex, int nextGirlIndex);
 };
 
 #endif // PROBLEMSOLVER_H

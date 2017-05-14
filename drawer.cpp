@@ -306,6 +306,7 @@ void Drawer::resetAllData() {
     graphStructure.allPossiblePairing.clear();
     graphStructure.setPriorityselectorDatasToDefault();
     solver->sbsNextMan = 0;
+    solver->preferencListReduction = false;
 }
 
 void Drawer::linkGraphElements(QPainter* painter) {
@@ -423,6 +424,7 @@ QString Drawer::RelabelIntegerNumber(int index, QString gender) {
 }
 
 void Drawer::generateBlockingEdgesStepByStep(){
+    graphStructure.generateAllPossiblePairing();
     solver->addActualGraphStructure(&graphStructure);
     solver->generateAllBlockingPairs();
     pairingId = 0;
