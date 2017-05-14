@@ -284,3 +284,34 @@ int GraphStructure::getXthElementsPositionInYsPreferenceList(int element, QList<
         }
     }
 }
+
+QList<int> GraphStructure::getPreferenceListElementsOfGenderlessElement(int clickedElementIndex) {
+
+    QList<int> elementsToDraw;
+
+    if (actualSelecterPosition != initIntValue) {
+        return elementsToDraw;
+    }
+
+    QString clickedElementGender = genderOfXthElement(clickedElementIndex);
+    int clickedElementGenderIndex = -1;
+
+
+    if (clickedElementGender == man) {
+        clickedElementGenderIndex = manList.indexOf(clickedElementIndex, 0);
+
+        for (int i=0; i < manPrioritiesList[clickedElementGenderIndex].length(); i++) {
+            elementsToDraw << womanList[manPrioritiesList[clickedElementGenderIndex][i]];
+        }
+    }
+
+    if (clickedElementGender == woman) {
+        clickedElementGenderIndex = womanList.indexOf(clickedElementIndex, 0);
+
+        for (int i=0; i < womanPrioritiesList[clickedElementGenderIndex].length(); i++) {
+            elementsToDraw << manList[womanPrioritiesList[clickedElementGenderIndex][i]];
+        }
+    }
+
+    return elementsToDraw;
+}

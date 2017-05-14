@@ -39,6 +39,7 @@ public:
     void insertXWoman(int number, int width, int height, int circleRadius);
     int positionOfXthElementInGenderbasedList(int indexOfELement, QString genderOfList);
     int getXthElementsPositionInYsPreferenceList(int element, QList<int> prefList);
+    QList<int> getPreferenceListElementsOfGenderlessElement(int clickedElementIndex);
 
 private:
     QString man;

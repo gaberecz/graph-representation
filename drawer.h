@@ -69,6 +69,7 @@ private:
     bool eventFilter(QObject *obj, QEvent *event);
     bool cursorpositionInBorder(QPoint cursorPosition);
     void insertGenderElement(QString gender, int number);
+    void drawPriorityOfMouseoverElement(QPainter* painter);
     bool clickedOnElement(int actualXPosition, int actualYPosition);
     int indexOfClickedElement(int actualXPosition, int actualYPosition);
     void DrawEll(double x, double y, double circleRadius, QPainter* painter);

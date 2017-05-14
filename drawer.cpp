@@ -35,6 +35,7 @@ void Drawer::paintEvent(QPaintEvent *event) {
     drawManElements(&painter);
     drawWomanElements(&painter);
     drawPrioritySelecterElementAndPrioritizedElements(&painter);
+    drawPriorityOfMouseoverElement(&painter);
 }
 
 void Drawer::drawDrawingplace(QPainter* painter) {
@@ -450,5 +451,18 @@ void Drawer::drawActualTestPairing(QPainter* painter) {
         painter->setPen(QPen(QColor(Qt::black), 2));
 
         painter->drawText(QPoint(this->width() - circleRadius*3/2, circleRadius/2), QString::number(pairingId + 1) + "/" + QString::number(graphStructure.allPossiblePairing.size()));
+    }
+}
+
+void Drawer::drawPriorityOfMouseoverElement(QPainter* painter) {
+    if (clickedOnElement(cursorPosition.x(), cursorPosition.y())) {
+
+        painter->setBrush(QBrush("#FFFF00"));
+        int clickedElementIndex = indexOfClickedElement(cursorPosition.x(), cursorPosition.y());
+        QList<int> elementsToDraw = graphStructure.getPreferenceListElementsOfGenderlessElement(clickedElementIndex);
+
+        for (int i=0; i<elementsToDraw.size(); i++) {
+            DrawEll(graphStructure.elementsXPosition[elementsToDraw[i]]-circleRadius/2, graphStructure.elementsYPosition[elementsToDraw[i]]-circleRadius/2, circleRadius, painter, i);
+        }
     }
 }
