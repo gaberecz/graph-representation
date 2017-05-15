@@ -452,7 +452,8 @@ void Drawer::drawActualTestPairing(QPainter* painter) {
 
         painter->setPen(QPen(QColor(Qt::black), 2));
 
-        painter->drawText(QPoint(this->width() - circleRadius*1.75, circleRadius/2), QString::number(pairingId + 1) + "/" + QString::number(graphStructure.allPossiblePairing.size()));
+        painter->drawText(QPoint(this->width() -circleRadius/2 - circleRadius/3 * (QString::number(pairingId + 1).length() + QString::number(graphStructure.allPossiblePairing.size()).length()),
+                                 circleRadius/2), QString::number(pairingId + 1) + "/" + QString::number(graphStructure.allPossiblePairing.size()));
     }
 }
 
