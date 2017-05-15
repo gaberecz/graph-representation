@@ -328,7 +328,7 @@ void Drawer::drawManElements(QPainter* painter) {
         } else {
             painter->setBrush(QBrush("#2BB9FF"));
         }
-        DrawEll(graphStructure.elementsXPosition[graphStructure.manList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.manList[i]]-circleRadius/2, circleRadius, painter, RelabelIntegerNumber(i, "man"));
+        DrawEll(graphStructure.elementsXPosition[graphStructure.manList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.manList[i]]-circleRadius/2, circleRadius, painter, i);
     }
 }
 
@@ -339,7 +339,7 @@ void Drawer::drawWomanElements(QPainter* painter) {
         } else {
             painter->setBrush(QBrush("#E41818"));
         }
-        DrawEll(graphStructure.elementsXPosition[graphStructure.womanList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.womanList[i]]-circleRadius/2, circleRadius, painter, RelabelIntegerNumber(i, "woman"));
+        DrawEll(graphStructure.elementsXPosition[graphStructure.womanList[i]]-circleRadius/2, graphStructure.elementsYPosition[graphStructure.womanList[i]]-circleRadius/2, circleRadius, painter, RelabelIntegerNumberOfWomen(i));
     }
 }
 
@@ -381,43 +381,23 @@ void Drawer::solveTheProblemStepByStep() {
 }
 
 void Drawer::initSetOfLabels() {
-    labelLettersForMen << "A";
-    labelLettersForMen << "B";
-    labelLettersForMen << "C";
-    labelLettersForMen << "D";
-    labelLettersForMen << "E";
-    labelLettersForMen << "F";
-    labelLettersForMen << "G";
-    labelLettersForMen << "H";
-    labelLettersForMen << "I";
-    labelLettersForMen << "J";
-
-
-    labelLettersForWomen << "N";
-    labelLettersForWomen << "O";
-    labelLettersForWomen << "P";
-    labelLettersForWomen << "Q";
-    labelLettersForWomen << "R";
-    labelLettersForWomen << "S";
-    labelLettersForWomen << "T";
-    labelLettersForWomen << "U";
-    labelLettersForWomen << "V";
-    labelLettersForWomen << "W";
-
-
+    labelLettersForWomen << "A";
+    labelLettersForWomen << "B";
+    labelLettersForWomen << "C";
+    labelLettersForWomen << "D";
+    labelLettersForWomen << "E";
+    labelLettersForWomen << "F";
+    labelLettersForWomen << "G";
+    labelLettersForWomen << "H";
+    labelLettersForWomen << "I";
+    labelLettersForWomen << "J";
 }
 
-QString Drawer::RelabelIntegerNumber(int index, QString gender) {
+QString Drawer::RelabelIntegerNumberOfWomen(int index) {
     QString newLabel = QString::number(index);
 
     for (int i=0; i<10; i++) {
-        if (gender == "man") {
-            newLabel.replace(QString::number(i), labelLettersForMen[i]);
-        } else {
-            if (gender == "woman") {
-                newLabel.replace(QString::number(i), labelLettersForWomen[i]);
-            }
-        }
+        newLabel.replace(QString::number(i), labelLettersForWomen[i]);
     }
 
     return newLabel;

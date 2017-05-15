@@ -44,7 +44,6 @@ private:
     QString currentState;
     QPoint cursorPosition;
     bool secondLeftArrowButtonPush;
-    QList<QString> labelLettersForMen;
     QList<QString> labelLettersForWomen;
 
     void initSetOfLabels();
@@ -54,7 +53,7 @@ private:
     void inserXMan(int number);
     void inserXWoman(int number);
     QPoint Knocking(QPoint point);
-    QString RelabelIntegerNumber(int index, QString gender);
+    QString RelabelIntegerNumberOfWomen(int index);
     void drawNextPairingElements();
     int randInt(int low, int high);
     void initManWomanPairSolution();
