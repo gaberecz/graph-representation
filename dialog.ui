@@ -18,12 +18,12 @@
     <rect>
      <x>10</x>
      <y>20</y>
-     <width>281</width>
+     <width>261</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Kérem adja meg hány elemet szeretne beszúrni: </string>
+    <string>Please type how many elements you want to insert:</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="Size">
