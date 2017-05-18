@@ -314,6 +314,7 @@ void Drawer::linkGraphElements(QPainter* painter) {
         for (int i=0; i<graphStructure.neighbours.size(); i++) {
             for (int j=0; j<graphStructure.neighbours.size(); j++) {
                 if (graphStructure.neighbours[i][j]) {
+                    if (currentState != state_diff_pairs && graphStructure.allPossiblePairing.isEmpty())
                     painter->drawLine(QPoint(graphStructure.elementsXPosition[i], graphStructure.elementsYPosition[i]),QPoint(graphStructure.elementsXPosition[j], graphStructure.elementsYPosition[j]));
                 }
             }
@@ -416,7 +417,7 @@ void Drawer::drawActualTestPairing(QPainter* painter) {
     if ( currentState == state_diff_pairs && !graphStructure.allPossiblePairing.isEmpty()) {
 
         for(int indexOfPair=0; indexOfPair < graphStructure.allPossiblePairing[pairingId].size(); indexOfPair++) {
-            painter->setPen(QPen(QColor(Qt::green), 2));
+            //painter->setPen(QPen(QColor(Qt::green), 2));
             painter->drawLine(QPoint(graphStructure.elementsXPosition[graphStructure.manList[indexOfPair]], graphStructure.elementsYPosition[graphStructure.manList[indexOfPair]]),
                     QPoint(graphStructure.elementsXPosition[graphStructure.womanList[graphStructure.allPossiblePairing[pairingId][indexOfPair]]],
                             graphStructure.elementsYPosition[graphStructure.womanList[graphStructure.allPossiblePairing[pairingId][indexOfPair]]]));
@@ -432,8 +433,8 @@ void Drawer::drawActualTestPairing(QPainter* painter) {
 
         painter->setPen(QPen(QColor(Qt::black), 2));
 
-        painter->drawText(QPoint(this->width() -circleRadius/2 - circleRadius/3 * (QString::number(pairingId + 1).length() + QString::number(graphStructure.allPossiblePairing.size()).length()),
-                                 circleRadius/2), QString::number(pairingId + 1) + "/" + QString::number(graphStructure.allPossiblePairing.size()));
+        //painter->drawText(QPoint(this->width() -circleRadius/2 - circleRadius/3 * (QString::number(pairingId + 1).length() + QString::number(graphStructure.allPossiblePairing.size()).length()),
+                                 //circleRadius/2), QString::number(pairingId + 1) + "/" + QString::number(graphStructure.allPossiblePairing.size()));
     }
 }
 
