@@ -372,6 +372,7 @@ void Drawer::solveTheProblem() {
     solver->leaveUnnecessaryElementsFromPrioLists();
     solver->solvePairingProblem();
     solver->cleanWomanPrioritiesAfterWorkDone();
+    graphStructure.debugManWomanPriorities();
 }
 
 void Drawer::solveTheProblemStepByStep() {

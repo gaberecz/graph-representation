@@ -205,10 +205,6 @@ void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom, int pr
         }
     }
 
-    for(int i=0; i<manPrioritiesList.size(); i++) {
-        qDebug() << "m_" << i << ": " << manPrioritiesList[i];
-    }
-
     for (int i=0; i<womanPrioritiesList.size(); i++) {
         QList<int> possibleElementsList;
         int womanPrioListLength;
@@ -234,11 +230,17 @@ void GraphStructure::generatePrioritiesForElements(bool isPrioListRandom, int pr
         }
     }
 
+    debugManWomanPriorities();
+    fillNeighbourData();
+}
+
+void GraphStructure::debugManWomanPriorities(){
+    for(int i=0; i<manPrioritiesList.size(); i++) {
+        qDebug() << "m_" << i << ": " << manPrioritiesList[i];
+    }
     for(int i=0; i<womanPrioritiesList.size(); i++) {
         qDebug() << "w_" << i << ": " << womanPrioritiesList[i];
     }
-
-    fillNeighbourData();
 }
 
 void GraphStructure::generateAllPossiblePairing(){

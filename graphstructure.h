@@ -31,6 +31,7 @@ public:
     void addWoman(QPoint point);
     void initNeighboursVector();
     int insertedElementsNumber();
+    void debugManWomanPriorities();
     void generateAllPossiblePairing();
     void setPrioritiesForElement(int index);
     void setPriorityselectorDatasToDefault();
